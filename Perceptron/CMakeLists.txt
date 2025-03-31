@@ -10,5 +10,6 @@ target_sources(Perceptron
         "src/Perceptron.cpp"
     PUBLIC
         "include/Perceptron.h"
+        "include/IPerceptron.h"
 )
 
