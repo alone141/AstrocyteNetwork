@@ -11,6 +11,7 @@ target_sources(Perceptron
     PUBLIC
         "include/Perceptron.h"
         "include/IPerceptron.h"
+        "include/ActivationFunctionEnum.h"
 )
 
 target_link_libraries(Perceptron

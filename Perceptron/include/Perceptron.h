@@ -7,31 +7,46 @@
 #include <Config.h>
 #include <array>
 #include <type_traits>
-template<int inputCount, int inputCountWithBias = inputCount + 1>
-class Perceptron : public IPerceptron {
-    static_assert(inputCount > 0, "Input count must be greater than 0.");
-    static_assert(inputCount +1 == inputCountWithBias, "Input with bias must be equal to input count + 1.");
-public:
-    constexpr Perceptron(int bias = 0) : bias(bias){
-    }
-    ~Perceptron() = default; 
-    constexpr float CalculateOutput(float input) {
-        float sum = 0.0f;
-        for(int i = 0; i < inputCount; i++){
-            sum += inputs[i] * weights[i];
-        }
-        sum += bias; // Add bias to the sum
-        return 0;
-    }
+#include <ActivationFunctionEnum.h>
 
-    constexpr float ActivationFunction(float input){
-        return input;
-    }
-private:
-    int bias;  
-    std::array<float, inputCount+1> weights; //weights for each input and bias(+1)
-    std::array<float, inputCount> inputs; 
-    float output;
-};
+namespace perceptron{
+    
+    template<int inputCount, ActivationFunctionEnum actFunctionEnum, int inputCountWithBias = inputCount + 1>
+    class Perceptron : public IPerceptron {
+    public:
+        constexpr Perceptron(int bias = 0){
+            static_assert(inputCount > 0, "Input count must be greater than 0.");
+            static_assert(inputCount +1 == inputCountWithBias, "Please do not use this template parameter.");
+    
+            inputs.fill(1.0f);
+            weights.fill(1.0f);
+    
+            weights[0] = bias;
+        }
+        constexpr ~Perceptron() = default; 
+    
+        constexpr float CalculateOutput(float input) {
+            float sum = 0.0f;
+            for(int i = 0; i < inputCountWithBias; i++){
+                sum += inputs[i] * weights[i];
+            }
+            return 0;
+        }
+    
+        constexpr float ActivationFunction(float input){
+            if constexpr (actFunctionEnum == ActivationFunctionEnum::Linear){
+                return input;
+            }
+            else{
+                return input +1;
+            }
+        }
+    private: 
+        std::array<float, inputCountWithBias> weights; //weights for each input and bias(+1)
+        std::array<float, inputCountWithBias> inputs; //inputs for each input and bias(+1)
+        float output;
+    };
+}
+
 
 #endif
