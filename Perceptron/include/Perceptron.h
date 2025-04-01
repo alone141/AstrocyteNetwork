@@ -5,14 +5,17 @@
 #include <vector>
 #include <utility>
 #include <Config.h>
-template<int inputCount>
+#include <array>
+#include <type_traits>
+template<int inputCount, int inputCountWithBias = inputCount + 1>
 class Perceptron : public IPerceptron {
+    static_assert(inputCount > 0, "Input count must be greater than 0.");
+    static_assert(inputCount +1 == inputCountWithBias, "Input with bias must be equal to input count + 1.");
 public:
-    Perceptron(int bias = 0) : bias(bias){
-
+    constexpr Perceptron(int bias = 0) : bias(bias){
     }
     ~Perceptron() = default; 
-    float CalculateOutput(float input) {
+    constexpr float CalculateOutput(float input) {
         float sum = 0.0f;
         for(int i = 0; i < inputCount; i++){
             sum += inputs[i] * weights[i];
@@ -21,14 +24,14 @@ public:
         return 0;
     }
 
-    float ActivationFunction(float input){
-
+    constexpr float ActivationFunction(float input){
+        return input;
     }
 private:
     int bias;  
-    float weights[inputCount]; // Weights for each input
-    float inputs[inputCount]; // Inputs to the perceptron
-    float output; // Output of the perceptron
+    std::array<float, inputCount+1> weights; //weights for each input and bias(+1)
+    std::array<float, inputCount> inputs; 
+    float output;
 };
 
 #endif
