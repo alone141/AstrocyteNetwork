@@ -13,3 +13,7 @@ target_sources(Perceptron
         "include/IPerceptron.h"
 )
 
+target_link_libraries(Perceptron
+    PUBLIC
+        Utility
+)
