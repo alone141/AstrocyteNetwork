@@ -1,6 +1,7 @@
 #ifndef UTILITY_H
 #define UTILITY_H
-
+#include <concepts>
+#include <type_traits>
 // Utility.h - Header file for utility functions and classes
 namespace utility
 {
@@ -16,8 +17,9 @@ namespace utility
         }
     
     }
-
-    constexpr int pow(float base, int exponent){
+    template <typename BaseType, typename ExpType> 
+    requires std::is_arithmetic_v<BaseType> && std::is_integral_v<ExpType>
+    constexpr int pow(BaseType base, ExpType exponent){
         if(exponent < 0)
             return 0; 
         else if(exponent == 0){
@@ -30,7 +32,6 @@ namespace utility
             return base;
         }
     }
-    constexpr float pow(auto base, auto exponent) = delete;
     
 }
 
