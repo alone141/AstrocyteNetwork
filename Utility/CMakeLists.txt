@@ -15,7 +15,7 @@ target_sources(Utility
 
 
 add_executable(UtilityUnitTest ${CMAKE_CURRENT_SOURCE_DIR}/test/src/UtilityUnitTest.cpp)
-target_link_libraries(UtilityUnitTest GTest::gtest_main)
+target_link_libraries(UtilityUnitTest Utility GTest::gtest_main)
 
 include(GoogleTest)
 gtest_discover_tests(UtilityUnitTest)
