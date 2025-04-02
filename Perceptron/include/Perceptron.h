@@ -1,12 +1,9 @@
 #ifndef PERCEPTRON_H
 #define PERCEPTRON_H
 
-#include "IPerceptron.h"
-#include <vector>
-#include <utility>
+#include <IPerceptron.h>
 #include <Config.h>
 #include <array>
-#include <type_traits>
 #include <ActivationFunctionEnum.h>
 
 namespace perceptron{
@@ -25,12 +22,12 @@ namespace perceptron{
         }
         constexpr ~Perceptron() = default; 
     
-        constexpr float CalculateOutput(float input) {
+        constexpr float CalculateOutput() {
             float sum = 0.0f;
             for(int i = 0; i < inputCountWithBias; i++){
                 sum += inputs[i] * weights[i];
             }
-            return 0;
+            return ActivationFunction(sum);
         }
     
         constexpr float ActivationFunction(float input){
@@ -41,6 +38,7 @@ namespace perceptron{
                 return input +1;
             }
         }
+        
     private: 
         std::array<float, inputCountWithBias> weights; //weights for each input and bias(+1)
         std::array<float, inputCountWithBias> inputs; //inputs for each input and bias(+1)

@@ -4,7 +4,7 @@ namespace perceptron {
     class IPerceptron {
         public:
             virtual ~IPerceptron() = default; // Destructor
-            virtual float CalculateOutput(float input) = 0; // Calculate output based on input
+            virtual float CalculateOutput() = 0; // Calculate output based on input
         
         };
         
