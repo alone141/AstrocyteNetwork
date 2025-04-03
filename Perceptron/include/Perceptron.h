@@ -23,15 +23,18 @@ namespace perceptron{
         }
         constexpr ~Perceptron() = default; 
     
-        constexpr float CalculateOutput() {
+        constexpr float CalculateOutput() override {
             float sum = 0.0f;
             for(int i = 0; i < inputCountWithBias; i++){
+                //custom inputs starts at index 1
+                //index 0 is reserved for bias
                 sum += inputs[i] * weights[i];
             }
-            return ActivationFunction(sum);
+            output = ActivationFunction(sum);
+            return output;
         }
     
-        constexpr float ActivationFunction(float input){
+        constexpr float ActivationFunction(float input) override {
             if constexpr (actFunctionEnum == ActivationFunctionEnum::Linear){
                 return utility::af::Linear(input);
             }
@@ -50,6 +53,12 @@ namespace perceptron{
             return input;
         }
         
+        constexpr float GetOutput() const override {
+            return output;
+        }
+        constexpr void SetInput(unsigned int inputIndex, float inputValue) override {
+            inputs[inputIndex] = inputValue;
+        }
     private: 
         std::array<float, inputCountWithBias> weights; //weights for each input and bias(+1)
         std::array<float, inputCountWithBias> inputs; //inputs for each input and bias(+1)

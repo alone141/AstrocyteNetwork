@@ -5,7 +5,7 @@
 consteval float fun(){
 
     perceptron::Perceptron <1, perceptron::ActivationFunctionEnum::Sigmoid> p;
-    an::AstrocyteNetwork an;
+    an::AstrocyteNetwork<2,2,1,1> an;
     return p.ActivationFunction(2);
 }
 int main() {
