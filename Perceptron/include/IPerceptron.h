@@ -3,8 +3,8 @@
 namespace perceptron {
     class IPerceptron {
         public:
-            virtual ~IPerceptron() = default; // Destructor
-            virtual float CalculateOutput() = 0; // Calculate output based on input
+            virtual constexpr ~IPerceptron() = default; // Destructor
+            virtual constexpr float CalculateOutput() = 0; // Calculate output based on input
         
         };
         

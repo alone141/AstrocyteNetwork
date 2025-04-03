@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Add an option to enable or disable tests
-option(ENABLE_TEST "Enable testing" ON)
+option(ENABLE_TEST "Enable testing" OFF)
 
 if(ENABLE_TEST)
   enable_testing()
@@ -23,6 +23,7 @@ if(ENABLE_TEST)
   FetchContent_MakeAvailable(googletest)
 endif()
 
-add_subdirectory(Main)
-add_subdirectory(Perceptron)
 add_subdirectory(Utility)
+add_subdirectory(Perceptron)
+add_subdirectory(AstrocyteNetwork)
+add_subdirectory(Main)

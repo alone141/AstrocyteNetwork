@@ -3,6 +3,7 @@
 
 #include <IPerceptron.h>
 #include <Config.h>
+#include <Utility.h>
 #include <array>
 #include <ActivationFunctionEnum.h>
 
@@ -15,7 +16,7 @@ namespace perceptron{
             static_assert(inputCount > 0, "Input count must be greater than 0.");
             static_assert(inputCount +1 == inputCountWithBias, "Please do not use this template parameter.");
     
-            inputs.fill(1.0f);
+            inputs.fill(0.0f);
             weights.fill(1.0f);
     
             weights[0] = bias;
@@ -32,11 +33,21 @@ namespace perceptron{
     
         constexpr float ActivationFunction(float input){
             if constexpr (actFunctionEnum == ActivationFunctionEnum::Linear){
-                return input;
+                return utility::af::Linear(input);
             }
-            else{
-                return input +1;
+            else if constexpr (actFunctionEnum == ActivationFunctionEnum::Sigmoid) {
+                return utility::af::Sigmoid(input);
             }
+            else if constexpr (actFunctionEnum == ActivationFunctionEnum::Tanh) {
+                return utility::af::Tanh(input);
+            }
+            else if constexpr (actFunctionEnum == ActivationFunctionEnum::ReLU) {
+                return utility::af::Relu(input);
+            }
+            else if constexpr (actFunctionEnum == ActivationFunctionEnum::LeakyReLU) {
+                return utility::af::LeakyRelu(input);
+            }
+            return input;
         }
         
     private: 

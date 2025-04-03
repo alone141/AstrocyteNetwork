@@ -2,4 +2,4 @@
 # Add an executable
 add_executable(Main main.cpp)
 
-target_link_libraries(Main PUBLIC Perceptron Utility)
+target_link_libraries(Main PUBLIC AstrocyteNetwork Perceptron Utility)

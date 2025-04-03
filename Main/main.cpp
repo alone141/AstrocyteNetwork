@@ -1,9 +1,11 @@
 #include <iostream>
-#include <Perceptron.h>
 #include <Utility.h>
+#include <Perceptron.h>
+#include <AstrocyteNetwork.h>
 consteval float fun(){
 
     perceptron::Perceptron <1, perceptron::ActivationFunctionEnum::Sigmoid> p;
+    an::AstrocyteNetwork an;
     return p.ActivationFunction(2);
 }
 int main() {

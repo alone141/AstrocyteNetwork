@@ -115,10 +115,10 @@ TEST(ReluTest, HandlesLargeInputs) {
 
 
 TEST(TanhTest, ApproximatesTanh) {
-    constexpr float result1 = utility::af::Tanh(0.0f);  
+    constexpr float result1 = utility::af::Tanh(0.5f);  
     constexpr float result2 = utility::af::Tanh(1.0f);  
     constexpr float result3 = utility::af::Tanh(-1.0f); 
-    EXPECT_NEAR(result1, std::tanh(0.0f), 0.001f); // Tanh(0) = 0
+    EXPECT_NEAR(result1, std::tanh(0.5f), 0.001f); // Tanh(0) = 0
     EXPECT_NEAR(result2, std::tanh(1.0f), 0.001f); // Tanh(1)
     EXPECT_NEAR(result3, std::tanh(-1.0f), 0.001f); // Tanh(-1)
 }
