@@ -39,21 +39,14 @@ namespace an{
                 }
             }
 
-            constexpr void FeedForward(std::array<float,inputPerceptronCount>& inputVector) {
+            constexpr void FeedForward(std::array<float,inputPerceptronCount>& inputArray) {
                 for (std::size_t i = 0; i < inputPerceptronCount; ++i) {
-                    inputLayer[i]->SetInput(1, inputVector[i]); // assign each input to the corresponding perceptron
+                    inputLayer[i]->SetInput(1, inputArray[i]); // assign each input to the corresponding perceptron
                     inputLayer[i]->CalculateOutput(); //this step might be unnecessary
                 }
-                for (auto &&inputPerceptron : inputLayer)
-                {
-                    for (auto &&hiddenPerceptron : hiddenLayer)
-                    {
-                        hiddenPerceptron->SetInput(1, inputVector[i]); 
-                    }
-                }
-                for (std::size_t inputIndex = 0; inputIndex < inputPerceptronCount; ++inputIndex) {
-                    for (std::size_t hiddenIndex = 0; hiddenIndex < inputPerceptronCount; ++hiddenIndex) {
-                    
+                for (std::size_t hiddenIndex = 0; hiddenIndex < hiddenPerceptronCount; ++hiddenIndex) {
+                    for (std::size_t inputIndex = 0; inputIndex < inputPerceptronCount; ++inputIndex) {
+                        hiddenLayer[hiddenIndex]->SetInput(inputIndex+1, inputLayer[inputIndex]->GetOutput());
                     }
                 }
                 
