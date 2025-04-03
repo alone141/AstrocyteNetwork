@@ -81,6 +81,71 @@ TEST(LnTest, HandlesBigValues) {
     EXPECT_NEAR(result, std::log(1000.0f), 0.001f);
 }
 
+TEST(SigmoidTest, ApproximatesSigmoid) {
+    constexpr float result1 = utility::af::Sigmoid(0.0f);  
+    constexpr float result2 = utility::af::Sigmoid(1.0f);  
+    constexpr float result3 = utility::af::Sigmoid(-1.0f); 
+    EXPECT_NEAR(result1, 0.5f, 0.001f); // Sigmoid(0) = 0.5
+    EXPECT_NEAR(result2, 1.0f / (1.0f + std::exp(-1.0f)), 0.001f);
+    EXPECT_NEAR(result3, 1.0f / (1.0f + std::exp(1.0f)), 0.001f);
+}
+
+TEST(SigmoidTest, HandlesLargeInputs) {
+    constexpr float result1 = utility::af::Sigmoid(100.0f);  // Large positive input
+    constexpr float result2 = utility::af::Sigmoid(-100.0f); // Large negative input
+    EXPECT_NEAR(result1, 1.0f, 0.001f); // Sigmoid(100) ≈ 1
+    EXPECT_NEAR(result2, 0.0f, 0.001f); // Sigmoid(-100) ≈ 0
+}
+
+TEST(ReluTest, HandlesPositiveAndNegativeInputs) {
+    constexpr float result1 = utility::af::Relu(1.0f);  
+    constexpr float result2 = utility::af::Relu(-1.0f); 
+    constexpr float result3 = utility::af::Relu(0.0f);  
+    EXPECT_EQ(result1, 1.0f);  // ReLU(1) = 1
+    EXPECT_EQ(result2, 0.0f);  // ReLU(-1) = 0
+    EXPECT_EQ(result3, 0.0f);  // ReLU(0) = 0
+}
+
+TEST(ReluTest, HandlesLargeInputs) {
+    constexpr float result1 = utility::af::Relu(1000.0f);  // Large positive input
+    constexpr float result2 = utility::af::Relu(-1000.0f); // Large negative input
+    EXPECT_EQ(result1, 1000.0f);  // ReLU(1000) = 1000
+    EXPECT_EQ(result2, 0.0f);     // ReLU(-1000) = 0
+}
+
+
+TEST(TanhTest, ApproximatesTanh) {
+    constexpr float result1 = utility::af::Tanh(0.0f);  
+    constexpr float result2 = utility::af::Tanh(1.0f);  
+    constexpr float result3 = utility::af::Tanh(-1.0f); 
+    EXPECT_NEAR(result1, std::tanh(0.0f), 0.001f); // Tanh(0) = 0
+    EXPECT_NEAR(result2, std::tanh(1.0f), 0.001f); // Tanh(1)
+    EXPECT_NEAR(result3, std::tanh(-1.0f), 0.001f); // Tanh(-1)
+}
+
+TEST(TanhTest, HandlesLargeInputs) {
+    constexpr float result1 = utility::af::Tanh(10.0f);   // Large positive input
+    constexpr float result2 = utility::af::Tanh(-10.0f); // Large negative input
+    EXPECT_NEAR(result1, 1.0f, 0.001f);  // Tanh(10) ≈ 1
+    EXPECT_NEAR(result2, -1.0f, 0.001f); // Tanh(-10) ≈ -1
+}
+
+TEST(LeakyReluTest, HandlesPositiveAndNegativeInputs) {
+    constexpr float result1 = utility::af::LeakyRelu(1.0f);  
+    constexpr float result2 = utility::af::LeakyRelu(-1.0f); 
+    constexpr float result3 = utility::af::LeakyRelu(0.0f);  
+    EXPECT_EQ(result1, 1.0f);  // LeakyReLU(1) = 1
+    EXPECT_EQ(result2, -0.01f); // LeakyReLU(-1) = -0.01 (default alpha = 0.01)
+    EXPECT_EQ(result3, 0.0f);  // LeakyReLU(0) = 0
+}
+
+TEST(LeakyReluTest, HandlesLargeInputs) {
+    constexpr float result1 = utility::af::LeakyRelu(1000.0f);  // Large positive input
+    constexpr float result2 = utility::af::LeakyRelu(-1000.0f); // Large negative input
+    EXPECT_EQ(result1, 1000.0f);       // LeakyReLU(1000) = 1000
+    EXPECT_EQ(result2, -10.0f);        // LeakyReLU(-1000) = -10 (default alpha = 0.01)
+}
+
 // Main function for running tests
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);

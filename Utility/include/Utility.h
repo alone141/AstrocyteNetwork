@@ -21,7 +21,7 @@ namespace utility
 
     //pow function for where exponent is an integer
     template <typename BaseType, typename ExpType> 
-    requires std::is_arithmetic_v<BaseType> && std::is_integral_v<ExpType>
+    requires std::is_arithmetic_v<BaseType> and std::is_integral_v<ExpType>
     constexpr float pow(BaseType base, ExpType exponent){
         if(exponent < 0)
             return 0; 
@@ -55,9 +55,31 @@ namespace utility
 
     //pow function for where exponent is an integer
     template <typename BaseType, typename ExpType> 
-    requires std::is_arithmetic_v<BaseType> && not(std::is_integral_v<ExpType>)
+    requires std::is_arithmetic_v<BaseType> and not(std::is_integral_v<ExpType>)
     constexpr float pow(BaseType base, ExpType exponent){
         return utility::exp(exponent * utility::ln(base));
+    }
+}
+
+namespace utility::af{
+    constexpr float Sigmoid(float x) {
+        return 1.0f / (1.0f + utility::exp(-x));
+    }
+
+    constexpr float Relu(float x) {
+        return x > 0.0f ? x : 0.0f;
+    }
+
+    constexpr float Tanh(float x) {
+        return (utility::exp(x) - utility::exp(-x)) / (utility::exp(x) + utility::exp(-x));
+    }
+
+    constexpr float Linear(float x) {
+        return x;
+    }
+
+    constexpr float LeakyRelu(float x, float alpha = 0.01f) {
+        return x > 0.0f ? x : alpha * x;
     }
 }
 
