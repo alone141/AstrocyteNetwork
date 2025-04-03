@@ -1,14 +1,86 @@
 #include <gtest/gtest.h>
 #include <Utility.h>
 #include <cmath>
-TEST(UtilityTests, FactorialFunction) {
-    constexpr float factorialResult = utility::factorial(5);
-    EXPECT_EQ(120, factorialResult);
+
+// Test for factorial function
+TEST(FactorialTest, HandlesPositiveInput) {
+    constexpr int result1 = utility::factorial(0);  // 0! = 1
+    constexpr int result2 = utility::factorial(1);  // 1! = 1
+    constexpr int result3 = utility::factorial(5);  // 5! = 120
+    EXPECT_EQ(result1, 1);
+    EXPECT_EQ(result2, 1);
+    EXPECT_EQ(result3, 120);
 }
-TEST(UtilityTests, PowFunction) {
-    constexpr float powResult = utility::pow(2.556, 3);
-    EXPECT_FLOAT_EQ(std::pow(2.556, 3), powResult);
+
+TEST(FactorialTest, HandlesNegativeInput) {
+    constexpr int result1 = utility::factorial(-1);  // Negative input returns 0
+    constexpr int result2 = utility::factorial(-10); // Negative input returns 0
+    EXPECT_EQ(result1, 0);
+    EXPECT_EQ(result2, 0);
 }
+
+TEST(FactorialTest, HandlesBigValues) {
+    constexpr int result = utility::factorial(10); // 10! = 3628800
+    EXPECT_EQ(result, 3628800);
+}
+
+// Test for pow function
+TEST(PowTest, HandlesPositiveExponent) {
+    constexpr float result1 = utility::pow(2.0f, 3);  
+    constexpr float result2 = utility::pow(5.0f, 0);  
+    constexpr float result3 = utility::pow(3.0f, 1);  
+    EXPECT_EQ(result1, std::pow(2.0f, 3));
+    EXPECT_EQ(result2, std::pow(5.0f, 0));
+    EXPECT_EQ(result3, std::pow(3.0f, 1));
+}
+
+TEST(PowTest, HandlesNegativeExponent) {
+    constexpr float result = utility::pow(2.0f, -3); // Negative exponent returns 0 (custom behavior)
+    EXPECT_EQ(result, 0.0f);
+}
+
+TEST(PowTest, HandlesZeroBase) {
+    constexpr float result1 = utility::pow(0.0f, 3);  
+    constexpr float result2 = utility::pow(0.0f, 0);  // 0^0 = 1 (by convention)
+    EXPECT_EQ(result1, std::pow(0.0f, 3));
+    EXPECT_EQ(result2, 1.0f);
+}
+
+TEST(PowTest, HandlesBigValues) {
+    constexpr float result = utility::pow(5.0f, 10); 
+    EXPECT_EQ(result, std::pow(5.0f, 10));
+}
+
+// Test for exp function
+TEST(ExpTest, ApproximatesExponential) {
+    constexpr float result1 = utility::exp(1.0f);  
+    constexpr float result2 = utility::exp(0.0f);  
+    constexpr float result3 = utility::exp(-1.0f); 
+    EXPECT_NEAR(result1, std::exp(1.0f), 0.001f);
+    EXPECT_NEAR(result2, std::exp(0.0f), 0.001f);
+    EXPECT_NEAR(result3, std::exp(-1.0f), 0.001f);
+}
+
+TEST(ExpTest, HandlesBigValues) {
+    constexpr float result = utility::exp(10.0f); 
+    EXPECT_NEAR(result, std::exp(10.0f), 0.001f);
+}
+
+// Test for ln function
+TEST(LnTest, ApproximatesNaturalLogarithm) {
+    constexpr float result1 = utility::ln(2.71828f); 
+    constexpr float result2 = utility::ln(1.0f);     
+    constexpr float result3 = utility::ln(0.5f);     
+    EXPECT_NEAR(result1, std::log(2.71828f), 0.001f);
+    EXPECT_NEAR(result2, std::log(1.0f), 0.001f);
+    EXPECT_NEAR(result3, std::log(0.5f), 0.001f);
+}
+
+TEST(LnTest, HandlesBigValues) {
+    constexpr float result = utility::ln(1000.0f); 
+    EXPECT_NEAR(result, std::log(1000.0f), 0.001f);
+}
+
 // Main function for running tests
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);

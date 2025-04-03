@@ -15,13 +15,12 @@ int main() {
     
     constexpr int factorial = utility::factorial(5); 
     constexpr int power = utility::pow(2, 3); 
-    constexpr float e = utility::exp(1);
+    constexpr float power2 = utility::pow(2.5, 3.5); 
+    constexpr float e = utility::exp(1.5);
     constexpr float ln = utility::ln(10);
-    std::cout << "Hello, World!" << ln << std::endl;
-    
+    std::cout << "Hello, World!" << power2 << std::endl;
 
 
 
-    std::cin.get(); // Wait for user input before closing the console window
     return 0;
 }

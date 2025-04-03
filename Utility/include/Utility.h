@@ -18,6 +18,8 @@ namespace utility
         }
     
     }
+
+    //pow function for where exponent is an integer
     template <typename BaseType, typename ExpType> 
     requires std::is_arithmetic_v<BaseType> && std::is_integral_v<ExpType>
     constexpr float pow(BaseType base, ExpType exponent){
@@ -35,7 +37,6 @@ namespace utility
         }
     }
     
-    
     constexpr float exp(float exponent, int iterationDepth = config::MATH_ITERATION_DEPTH){
         float result = 0;
         for(int i =0; i < iterationDepth; i++){
@@ -50,6 +51,13 @@ namespace utility
             result += (1.0/(2.0*i + 1.0))*utility::pow((x-1)/(x+1),2*i +1);
         }
         return 2*result;
+    }
+
+    //pow function for where exponent is an integer
+    template <typename BaseType, typename ExpType> 
+    requires std::is_arithmetic_v<BaseType> && not(std::is_integral_v<ExpType>)
+    constexpr float pow(BaseType base, ExpType exponent){
+        return utility::exp(exponent * utility::ln(base));
     }
 }
 
