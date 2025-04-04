@@ -14,7 +14,7 @@ namespace an{
         using Layer = std::array<std::unique_ptr<perceptron::IPerceptron>, perceptronCount>;
         using inputPerceptronType = perceptron::Perceptron<1,perceptron::ActivationFunctionEnum::Linear>;
         using hiddenPerceptronType = perceptron::Perceptron<inputPerceptronCount, perceptron::ActivationFunctionEnum::ReLU>;
-        using outputPerceptronType = perceptron::Perceptron<hiddenPerceptronCount,perceptron::ActivationFunctionEnum::Sigmoid>;
+        using outputPerceptronType = perceptron::Perceptron<hiddenPerceptronCount,perceptron::ActivationFunctionEnum::Linear>;
 
         public:
             constexpr AstrocyteNetwork(){

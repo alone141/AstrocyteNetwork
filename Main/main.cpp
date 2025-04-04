@@ -6,22 +6,24 @@
 consteval float fun(){
 
     perceptron::Perceptron <1, perceptron::ActivationFunctionEnum::Sigmoid> p;
-/*     an::AstrocyteNetwork<1,1,1> an;
-    constexpr auto output = an.GetOutputLayer(); */
+    an::AstrocyteNetwork<2,2,1> an;
+    auto input = std::to_array({10.0f,7.0f});
+    an.FeedForward(input);
+    float output = an.GetOutputLayer()[0];
 
-    return p.ActivationFunction(2);
+    return output;
 }
 int main() {
     perceptron::Perceptron <1, perceptron::ActivationFunctionEnum::Sigmoid> p;
     p.CalculateOutput();
-    constexpr float c = fun();
+    static_assert((int)fun() == 12);
     std::cout << "Hello, World!" << fun() << std::endl;
 
-    an::AstrocyteNetwork<2,2,1> an;
-    auto input = std::to_array({6.0f,6.0f});
-    an.FeedForward(input);
-    auto output = an.GetOutputLayer();
 
+/*     an::AstrocyteNetwork<2,2,1> an;
+    auto input = std::to_array({10.0f,7.0f});
+    an.FeedForward(input);
+    constexpr auto output = an.GetOutputLayer()[0]; */
 
     constexpr int factorial = utility::factorial(5); 
     constexpr int power = utility::pow(2, 3); 
