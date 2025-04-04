@@ -17,9 +17,10 @@ namespace perceptron{
             static_assert(inputCount +1 == inputCountWithBias, "Please do not use this template parameter.");
     
             inputs.fill(0.0f);
-            weights.fill(1.0f);
+            weights.fill(0.6f);
     
             weights[0] = bias;
+            inputs[0] = bias;
         }
         constexpr ~Perceptron() = default; 
     
@@ -58,6 +59,11 @@ namespace perceptron{
         }
         constexpr void SetInput(unsigned int inputIndex, float inputValue) override {
             inputs[inputIndex] = inputValue;
+        }
+
+        //doesnt do what its supposed to do yet
+        constexpr void ResetWeights() override {
+            weights.fill(1.0f);
         }
     private: 
         std::array<float, inputCountWithBias> weights; //weights for each input and bias(+1)

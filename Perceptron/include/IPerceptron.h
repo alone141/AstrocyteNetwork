@@ -8,6 +8,7 @@ namespace perceptron {
             virtual constexpr float ActivationFunction(float input) = 0;
             virtual constexpr float GetOutput() const = 0;
             virtual constexpr void SetInput(unsigned int inputIndex, float inputValue) = 0;
+            virtual constexpr void ResetWeights() = 0;
         };
         
 }

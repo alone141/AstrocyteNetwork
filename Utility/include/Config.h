@@ -8,7 +8,7 @@ namespace config
     static constexpr unsigned int OUTPUT_NEURONS = 1;
 
     //Number of iteration steps for mathematical computations
-    static constexpr unsigned int MATH_ITERATION_DEPTH = 10; 
+    static constexpr unsigned int MATH_ITERATION_DEPTH = 30; 
 }
 
 
