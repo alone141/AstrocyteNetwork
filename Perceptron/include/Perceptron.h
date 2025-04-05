@@ -6,7 +6,7 @@
 #include <Utility.h>
 #include <array>
 #include <ActivationFunctionEnum.h>
-
+#include <iostream>
 namespace perceptron{
     
     template<int inputCount, ActivationFunctionEnum actFunctionEnum, int inputCountWithBias = inputCount + 1>
@@ -16,17 +16,19 @@ namespace perceptron{
             static_assert(inputCount > 0, "Input count must be greater than 0.");
             static_assert(inputCount +1 == inputCountWithBias, "Please do not use this template parameter.");
     
-            for (int i = 0; i < inputCountWithBias; i++)
+            /* static int index = 0; */
+            for (int i=0; i < inputCountWithBias; i++)
             {
-                weights[i] = utility::random::GetRandomUniform(i);
+                weights[i] = utility::random::GetRandomUniform2();
+                /* index +=5; */
             }
             
             
             inputs.fill(0.0f);
 /*             weights.fill(0.6f); */
             
-            weights[0] = bias;
-            inputs[0] = bias;
+            weights[0] = 1;
+            inputs[0] = 1;
         }
         constexpr ~Perceptron() = default; 
     
@@ -80,7 +82,21 @@ namespace perceptron{
         constexpr void ResetWeights() override {
             weights.fill(1.0f);
         }
-
+        void Print() override {
+            std::cout << "Weights: {  ";
+            for (const auto& weight : weights) {
+                std::cout << weight << ", ";
+            }
+            std::cout << "}" << std::endl;
+        
+            std::cout << "Inputs: { ";
+            for (const auto& input : inputs) {
+                std::cout << input << ", ";
+            }
+            std::cout << "}" << std::endl;
+        
+            std::cout << "Output: " << output << std::endl << std::endl;
+        }
     private: 
         std::array<float, inputCountWithBias> weights; //weights for each input and bias(+1)
         std::array<float, inputCountWithBias> inputs; //inputs for each input and bias(+1)

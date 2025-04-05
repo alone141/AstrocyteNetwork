@@ -5,7 +5,8 @@
 #include <Config.h>
 #include <cstdint>
 #include <limits>
-
+#include <cmath>
+#include <random>
 // Utility.h - Header file for utility functions and classes
 namespace utility
 {
@@ -65,8 +66,10 @@ namespace utility
 }
 
 namespace utility::af{
-    constexpr float Sigmoid(float x) {
-        return 1.0f / (1.0f + utility::exp(-x));
+    float Sigmoid(float x) {
+        //if(x < 10) abort();
+        return 1.0f / (1.0f + std::expf(-x));
+        //return 1.0f / (1.0f + utility::exp(-x));
     }
 
     constexpr float Relu(float x) {
@@ -144,14 +147,15 @@ namespace utility::random {
             --count;
         }
 
-        return static_cast<float>(pcg()) / INT_MAX - 1.0f;
+        return static_cast<float>(pcg()) / INT_MAX - 0.5f;
     }
- 
-/*     constexpr auto GetRandomUniform(int count)
+    float GetRandomUniform2()
     {
-        auto random = get_random(count);
-        return random / PCG::max() * 2.0f - 1.0f;
-    } */
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_real_distribution<float> dis(0.0f, 1.0f);
+        return dis(gen);
+    }
 }
 
 #endif // UTILITY_H

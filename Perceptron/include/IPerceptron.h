@@ -1,5 +1,6 @@
 #ifndef IPERCEPTRON_H
 #define IPERCEPTRON_H
+
 namespace perceptron {
     class IPerceptron {
         public:
@@ -11,6 +12,7 @@ namespace perceptron {
             virtual constexpr void SetInput(unsigned int inputIndex, float inputValue) = 0;
             virtual constexpr void SetWeight(unsigned int weightIndex, float weightValue) = 0;
             virtual constexpr void ResetWeights() = 0;
+            virtual void Print()=0;
         };
         
 }

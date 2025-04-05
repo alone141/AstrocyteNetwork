@@ -15,29 +15,27 @@ consteval float fun(){
     return output;
 }
 int main() {
-    perceptron::Perceptron <1, perceptron::ActivationFunctionEnum::Sigmoid> p;
-    p.CalculateOutput();
-    static_assert((int)fun() > 0 || (int)fun() <= 0);
-    std::cout << "Hello, World!" << fun() << std::endl;
-    
-    constexpr float rand = utility::random::GetRandomUniform(2);
-    std::cout << "Rand:" << rand << std::endl;
+
 
     an::AstrocyteNetwork<2,2,1> an;
-    auto input = std::to_array({10.0f,7.0f});
+    auto input = std::to_array({5.0f,7.0f});
     an.FeedForward(input);
-    auto output = an.GetOutputLayer()[0];
+    float output = an.GetOutputLayer()[0];
+    std::cout << "Before learning:" << output << std::endl;
+    auto backprop = std::to_array({10.0f});
+    an.Print();
 
-    constexpr int factorial = utility::factorial(5); 
-    constexpr int power = utility::pow(2, 3); 
-    constexpr float power2 = utility::pow(2.5, 3.5); 
-    constexpr float e = utility::exp(1.5);
-    constexpr float ln = utility::ln(10);
+    for (size_t i = 0; i < 100; i++)
+    {
+        an.Backpropagation(backprop,0.01);
+    }
+    
+    auto input2 = std::to_array({5.0f,7.0f});
+    an.FeedForward(input2);
+    float output2 = an.GetOutputLayer()[0];
 
-    constexpr float sig = utility::af::Sigmoid(8.64f);
-    std::cout << "Hello, World!" << power2 << std::endl;
-
-
-
+    std::cout << std::endl << "------------------------------------------" << std::endl;
+    std::cout << "After learning:" << output2 << std::endl;
+    an.Print();
     return 0;
 }
