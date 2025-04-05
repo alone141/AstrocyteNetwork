@@ -16,9 +16,15 @@ namespace perceptron{
             static_assert(inputCount > 0, "Input count must be greater than 0.");
             static_assert(inputCount +1 == inputCountWithBias, "Please do not use this template parameter.");
     
+            for (int i = 0; i < inputCountWithBias; i++)
+            {
+                weights[i] = utility::random::GetRandomUniform(i);
+            }
+            
+            
             inputs.fill(0.0f);
-            weights.fill(0.6f);
-    
+/*             weights.fill(0.6f); */
+            
             weights[0] = bias;
             inputs[0] = bias;
         }
