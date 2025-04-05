@@ -60,17 +60,27 @@ namespace perceptron{
             return input;
         }
         
+
         constexpr float GetOutput() const override {
             return output;
         }
+
+        //todo: bound check
+        constexpr float GetWeight(unsigned int weightIndex) const override {
+            return weights[weightIndex];
+        }
         constexpr void SetInput(unsigned int inputIndex, float inputValue) override {
             inputs[inputIndex] = inputValue;
+        }
+        constexpr void SetWeight(unsigned int weightIndex, float weightValue) override {
+            weights[weightIndex] = weightValue;
         }
 
         //doesnt do what its supposed to do yet
         constexpr void ResetWeights() override {
             weights.fill(1.0f);
         }
+
     private: 
         std::array<float, inputCountWithBias> weights; //weights for each input and bias(+1)
         std::array<float, inputCountWithBias> inputs; //inputs for each input and bias(+1)

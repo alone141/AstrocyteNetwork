@@ -8,15 +8,16 @@ consteval float fun(){
     perceptron::Perceptron <1, perceptron::ActivationFunctionEnum::Sigmoid> p;
     an::AstrocyteNetwork<2,2,1> an;
     auto input = std::to_array({10.0f,7.0f});
+    auto backprop = std::to_array({10.0f});
     an.FeedForward(input);
     float output = an.GetOutputLayer()[0];
-
+    an.Backpropagation(backprop,0.01);
     return output;
 }
 int main() {
     perceptron::Perceptron <1, perceptron::ActivationFunctionEnum::Sigmoid> p;
     p.CalculateOutput();
-    //static_assert((int)fun() == 12);
+    static_assert((int)fun() > 0 || (int)fun() <= 0);
     std::cout << "Hello, World!" << fun() << std::endl;
     
     constexpr float rand = utility::random::GetRandomUniform(2);

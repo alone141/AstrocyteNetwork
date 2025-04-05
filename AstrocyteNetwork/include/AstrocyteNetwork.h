@@ -21,6 +21,7 @@ namespace an{
                 static_assert(inputPerceptronCount > 0,  "Input layer perceptron count must be bigger than 0");
                 static_assert(hiddenPerceptronCount > 0, "Hidden layer perceptron count must be bigger than 0");
                 static_assert(layerCount > 0,            "Layer count must be bigger than 0");
+                static_assert(layerCount == 1,           "Currently, only networks with 1 hidden layer is supported");
                 static_assert(outputPerceptronCount > 0, "Output layer perceptron count must be bigger than 0");
 
                 InitializeNetwork();
@@ -60,9 +61,54 @@ namespace an{
                         outputLayer[o]->SetInput(h+1, hiddenLayer[h]->GetOutput());
                     }
                     outputLayer[o]->CalculateOutput();
-                }
-                
+                }    
             }
+
+            constexpr void Backpropagation(std::array<float,outputPerceptronCount>& expectedArray, float learningRate){
+                std::array<float, outputPerceptronCount> gradient;                
+                for (std::size_t h = 0; h < hiddenPerceptronCount; h++)
+                {
+                    //https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/
+
+                    //NOT READY
+                    //backpropagation from hidden to input
+                    for (std::size_t h = 0; h < hiddenPerceptronCount; h++)
+                    {
+                        for (std::size_t i = 0; i < outputPerceptronCount; i++)
+                        {
+                            const float& out = outputLayer[i]->GetOutput();
+                            const float& target = expectedArray[i];
+                            const float& oldWeight = hiddenLayer[h]->GetWeight(i);
+    
+                            const float gradient = -(target - out) * out * (1 - out) * out;
+    
+                            const float newWeight = oldWeight - learningRate * gradient;
+                        }
+                    }
+
+
+                    //backpropagation from output to hidden
+                    for (std::size_t h = 0; h < hiddenPerceptronCount; h++)
+                    {
+                        for (std::size_t i = 0; i < outputPerceptronCount; i++)
+                        {
+                            const float& out = outputLayer[i]->GetOutput();
+                            const float& target = expectedArray[i];
+                            const float& oldWeight = hiddenLayer[h]->GetWeight(i);
+    
+                            const float gradient = -(target - out) * out * (1 - out) * out;
+    
+                            const float newWeight = oldWeight - learningRate * gradient;
+                            hiddenLayer[h]->SetWeight(i, newWeight);
+                        }
+                    }
+                    
+
+                }
+            }
+
+
+            
             constexpr std::array<float,outputPerceptronCount> GetOutputLayer() const {
                 std::array<float,outputPerceptronCount> result;
                 for (std::size_t i = 0; i < outputPerceptronCount; ++i) {
