@@ -25,8 +25,8 @@ namespace perceptron{
             inputs.fill(0.0f);
 /*             weights.fill(0.6f); */
             
-            weights[0] = bias;
-            inputs[0] = bias;
+            weights[0] = 1;
+            inputs[0] = 1;
         }
         constexpr ~Perceptron() = default; 
     
