@@ -31,13 +31,12 @@ consteval auto TestConsEval(){
 
     an::AstrocyteNetwork<3, 5, 2> network;
     auto retVal = network.SerializeWeights();
+    network.Train(trainingData,learningRate,epochs);
     return retVal;
-    //network.Train(trainingData,learningRate,epochs);
     //return network;
 }
 
 int main() {
-    auto retVall = TestConsEval();
     float learningRate = 0.2f;
     int epochs = 3000;
     std::array<std::pair<std::array<float, 3>, std::array<float, 2>>, 4> trainingData = {
@@ -48,6 +47,7 @@ int main() {
     };
     
     an::AstrocyteNetwork<3, 5, 2> network;
+
     std::cout << " --------------------------------- Before Training --------------------------------- " << std::endl;
     network.Print();
     std::cout << " --------------------------------- Before Training --------------------------------- " << std::endl;
@@ -72,15 +72,10 @@ int main() {
             std::cout << "ERROR" << std::endl;
         }
     }
-    an::AstrocyteNetwork<3, 5, 2> randomNetwork;
-    auto wei = randomNetwork.SerializeWeights();
 
-    network.DeserializeWeights(wei);
-    constexpr auto a = utility::random::GetRandomUniform();
     //constexpr auto result = TestConsEval();
     //std::cout << "Calculated Output 1: " << result[0] << std::endl;
     //std::cout << "Calculated Output 2: " << result[1] << std::endl;
-
     /*
     an::AstrocyteNetwork<2,2,1> an;
     auto input = std::to_array({5.0f,7.0f});
