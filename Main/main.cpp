@@ -22,12 +22,12 @@ int main() {
     an.FeedForward(input);
     float output = an.GetOutputLayer()[0];
     std::cout << "Before learning:" << output << std::endl;
-    auto backprop = std::to_array({10.0f});
+    auto backprop = std::to_array({1.0f});
     an.Print();
 
-    for (size_t i = 0; i < 100; i++)
+    for (size_t i = 0; i < 10000; i++)
     {
-        an.Backpropagation(backprop,0.01);
+        an.Backpropagation(backprop,0.1);
     }
     
     auto input2 = std::to_array({5.0f,7.0f});

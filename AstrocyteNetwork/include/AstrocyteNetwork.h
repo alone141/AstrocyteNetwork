@@ -14,7 +14,7 @@ namespace an{
         using Layer = std::array<std::unique_ptr<perceptron::IPerceptron>, perceptronCount>;
         using inputPerceptronType = perceptron::Perceptron<1,perceptron::ActivationFunctionEnum::Linear>;
         using hiddenPerceptronType = perceptron::Perceptron<inputPerceptronCount, perceptron::ActivationFunctionEnum::Sigmoid>;
-        using outputPerceptronType = perceptron::Perceptron<hiddenPerceptronCount,perceptron::ActivationFunctionEnum::Linear>;
+        using outputPerceptronType = perceptron::Perceptron<hiddenPerceptronCount,perceptron::ActivationFunctionEnum::Sigmoid>;
 
         public:
             constexpr AstrocyteNetwork(){
@@ -32,6 +32,7 @@ namespace an{
                 for (auto &&perceptron : inputLayer)
                 {
                     perceptron = std::make_unique<inputPerceptronType>();
+                    perceptron->ResetWeights();
                 }
                 for (auto &&perceptron : hiddenLayer)
                 {
@@ -40,7 +41,6 @@ namespace an{
                 for (auto &&perceptron : outputLayer)
                 {
                     perceptron = std::make_unique<outputPerceptronType>();
-                    perceptron->ResetWeights();
                 }
             }
 
@@ -65,6 +65,10 @@ namespace an{
             }
 
             constexpr void Backpropagation(std::array<float, outputPerceptronCount>& expectedArray, float learningRate) {
+
+                //https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/
+
+                
                 // Step 1: Compute gradients for the output layer
                 std::array<float, outputPerceptronCount> outputGradients;
                 for (std::size_t o = 0; o < outputPerceptronCount; ++o) {
@@ -78,38 +82,38 @@ namespace an{
                 for (std::size_t h = 0; h < hiddenPerceptronCount; ++h) {
                     float gradientSum = 0.0f;
                     for (std::size_t o = 0; o < outputPerceptronCount; ++o) {
-                        gradientSum += outputGradients[o] * hiddenLayer[h]->GetWeight(o + 1); // o+1 because weight[0] is bias
+                        gradientSum += outputGradients[o] * outputLayer[o]->GetWeight(h + 1); // h+1 because weight[0] is bias
                     }
                     const float& hiddenOutput = hiddenLayer[h]->GetOutput();
                     hiddenGradients[h] = gradientSum * hiddenOutput * (1 - hiddenOutput); // Gradient for hidden perceptron
                 }
             
-                // Step 3: Update weights in the hidden layer (hidden to output)
+                // Step 3: Update weights for the output layer
+                for (std::size_t o = 0; o < outputPerceptronCount; ++o) {
+                    for (std::size_t h = 0; h < hiddenPerceptronCount; ++h) {
+                        const float& hiddenOutput = hiddenLayer[h]->GetOutput();
+                        const float oldWeight = outputLayer[o]->GetWeight(h + 1); // h+1 because weight[0] is bias
+                        const float newWeight = oldWeight - learningRate * outputGradients[o] * hiddenOutput;
+                        outputLayer[o]->SetWeight(h + 1, newWeight);
+                    }
+                    // Update bias weight for output perceptron
+                    const float oldBiasWeight = outputLayer[o]->GetWeight(0);
+                    const float newBiasWeight = oldBiasWeight - learningRate * outputGradients[o];
+                    outputLayer[o]->SetWeight(0, newBiasWeight);
+                }
+            
+                // Step 4: Update weights for the hidden layer (input to hidden)
                 for (std::size_t h = 0; h < hiddenPerceptronCount; ++h) {
-                    for (std::size_t o = 0; o < outputPerceptronCount; ++o) {
-                        const float& outputGradient = outputGradients[o];
-                        const float oldWeight = hiddenLayer[h]->GetWeight(o + 1); // o+1 because weight[0] is bias
-                        const float newWeight = oldWeight - learningRate * outputGradient * hiddenLayer[h]->GetOutput();
-                        hiddenLayer[h]->SetWeight(o + 1, newWeight);
+                    for (std::size_t i = 0; i < inputPerceptronCount; ++i) {
+                        const float& input = inputLayer[i]->GetOutput();
+                        const float oldWeight = hiddenLayer[h]->GetWeight(i + 1); // i+1 because weight[0] is bias
+                        const float newWeight = oldWeight - learningRate * hiddenGradients[h] * input;
+                        hiddenLayer[h]->SetWeight(i + 1, newWeight);
                     }
                     // Update bias weight for hidden perceptron
                     const float oldBiasWeight = hiddenLayer[h]->GetWeight(0);
                     const float newBiasWeight = oldBiasWeight - learningRate * hiddenGradients[h];
                     hiddenLayer[h]->SetWeight(0, newBiasWeight);
-                }
-            
-                // Step 4: Update weights in the input layer (input to hidden)
-                for (std::size_t i = 0; i < inputPerceptronCount; ++i) {
-                    for (std::size_t h = 0; h < hiddenPerceptronCount; ++h) {
-                        const float& hiddenGradient = hiddenGradients[h];
-                        const float oldWeight = inputLayer[i]->GetWeight(h + 1); // h+1 because weight[0] is bias
-                        const float newWeight = oldWeight - learningRate * hiddenGradient * inputLayer[i]->GetOutput();
-                        inputLayer[i]->SetWeight(h + 1, newWeight);
-                    }
-                    // Update bias weight for input perceptron
-                    const float oldBiasWeight = inputLayer[i]->GetWeight(0);
-                    const float newBiasWeight = oldBiasWeight - learningRate * hiddenGradients[i];
-                    inputLayer[i]->SetWeight(0, newBiasWeight);
                 }
             }
 
