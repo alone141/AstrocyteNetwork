@@ -18,14 +18,9 @@ constexpr int cround(double x) {
     return (x >= 0.0) ? int(x + 0.5) : int(x - 0.5);
   }
 
-void TrainXOR() {
-    // Define the network: 3 input perceptrons, 5 hidden perceptrons, 2 output perceptron
-    an::AstrocyteNetwork<3, 5, 2> network;
-    std::cout << " --------------------------------- Before Training --------------------------------- " << std::endl;
-    network.Print();
-    std::cout << " --------------------------------- Before Training --------------------------------- " << std::endl;
-
-    // XOR training data
+consteval void TestConsEval(){
+    float learningRate = 0.2f;
+    int epochs = 3000;
     std::array<std::pair<std::array<float, 3>, std::array<float, 2>>, 4> trainingData = {
         std::make_pair(std::array<float, 3>{0.0f, 0.0f, 1.0f}, std::array<float, 2>{0.0f,0.0f}),
         std::make_pair(std::array<float, 3>{0.0f, 1.0f, 1.0f}, std::array<float, 2>{1.0f,0.0f}),
@@ -33,31 +28,28 @@ void TrainXOR() {
         std::make_pair(std::array<float, 3>{1.0f, 1.0f, 0.5f}, std::array<float, 2>{0.0f,1.0f})
     };
 
-    // Training parameters
+    an::AstrocyteNetwork<3, 5, 2> network;
+    network.Train(trainingData,learningRate,epochs);
+
+}
+
+int main() {
+    TestConsEval();
     float learningRate = 0.2f;
     int epochs = 3000;
+    std::array<std::pair<std::array<float, 3>, std::array<float, 2>>, 4> trainingData = {
+        std::make_pair(std::array<float, 3>{0.0f, 0.0f, 1.0f}, std::array<float, 2>{0.0f,0.0f}),
+        std::make_pair(std::array<float, 3>{0.0f, 1.0f, 1.0f}, std::array<float, 2>{1.0f,0.0f}),
+        std::make_pair(std::array<float, 3>{1.0f, 0.0f, 1.0f}, std::array<float, 2>{1.0f,0.0f}),
+        std::make_pair(std::array<float, 3>{1.0f, 1.0f, 0.5f}, std::array<float, 2>{0.0f,1.0f})
+    };
 
-    // Training loop
-    for (int epoch = 0; epoch < epochs; ++epoch) {
-        float totalError = 0.0f;
+    an::AstrocyteNetwork<3, 5, 2> network;
+    std::cout << " --------------------------------- Before Training --------------------------------- " << std::endl;
+    network.Print();
+    std::cout << " --------------------------------- Before Training --------------------------------- " << std::endl;
 
-        for (auto& [input, targetOutput] : trainingData) {
-            // Forward pass
-            network.FeedForward(input);
-
-            // Backpropagation
-            network.Backpropagation(targetOutput, learningRate);
-
-            // Calculate error for monitoring
-            auto output = network.GetOutputLayer();
-            totalError += 0.5f * (targetOutput[0] - output[0]) * (targetOutput[0] - output[0]); // Mean Squared Error
-        }
-
-        // Print error every 1000 epochs
-        if (epoch % 1000 == 0) {
-            std::cout << "Epoch " << epoch << ", Total Error: " << totalError << std::endl;
-        }
-    }
+    network.Train(trainingData,learningRate,epochs);
 
     std::cout << " --------------------------------- After Training --------------------------------- " << std::endl;
     network.Print();
@@ -76,43 +68,12 @@ void TrainXOR() {
             std::cout << "ERROR" << std::endl;
         }
     }
-    
-}
-consteval void TestConsEval(){
-    an::AstrocyteNetwork<3, 5, 2> network;
 
-    std::array<std::pair<std::array<float, 3>, std::array<float, 2>>, 4> trainingData = {
-        std::make_pair(std::array<float, 3>{0.0f, 0.0f, 1.0f}, std::array<float, 2>{0.0f,0.0f}),
-        std::make_pair(std::array<float, 3>{0.0f, 1.0f, 1.0f}, std::array<float, 2>{1.0f,0.0f}),
-        std::make_pair(std::array<float, 3>{1.0f, 0.0f, 1.0f}, std::array<float, 2>{1.0f,0.0f}),
-        std::make_pair(std::array<float, 3>{1.0f, 1.0f, 0.5f}, std::array<float, 2>{0.0f,1.0f})
-    };
-   // Training parameters
-    float learningRate = 0.2f;
-    int epochs = 3000;
 
-    // Training loop
-    for (int epoch = 0; epoch < epochs; ++epoch) {
-        float totalError = 0.0f;
-
-        for (auto& [input, targetOutput] : trainingData) {
-            // Forward pass
-            network.FeedForward(input);
-
-            // Backpropagation
-            network.Backpropagation(targetOutput, learningRate);
-
-            // Calculate error for monitoring
-            auto output = network.GetOutputLayer();
-            totalError += 0.5f * (targetOutput[0] - output[0]) * (targetOutput[0] - output[0]); // Mean Squared Error
-        }
-    } 
-}
-
-int main() {
     constexpr auto a = utility::random::GetRandomUniform();
-    TestConsEval();
-    TrainXOR();
+    //constexpr auto result = TestConsEval();
+    //std::cout << "Calculated Output 1: " << result[0] << std::endl;
+    //std::cout << "Calculated Output 2: " << result[1] << std::endl;
 
     /*
     an::AstrocyteNetwork<2,2,1> an;

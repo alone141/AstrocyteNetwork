@@ -75,8 +75,6 @@ namespace an{
             constexpr void Backpropagation(std::array<float, outputPerceptronCount>& expectedArray, float learningRate) {
 
                 //https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/
-
-                
                 // Step 1: Compute gradients for the output layer
                 std::array<float, outputPerceptronCount> outputGradients;
                 for (std::size_t o = 0; o < outputPerceptronCount; ++o) {
@@ -124,7 +122,21 @@ namespace an{
                     hiddenLayer[h]->SetWeight(0, newBiasWeight);
                 }
             }
+            constexpr void Train(std::array<std::pair<std::array<float, 3>, std::array<float, 2>>, 4> trainingData, float learningRate, int epochs){
+                for (int epoch = 0; epoch < epochs; ++epoch) {
+                    float totalError = 0.0f;
 
+                    for (auto& [input, targetOutput] : trainingData) {
+                        FeedForward(input);
+
+                        Backpropagation(targetOutput, learningRate);
+
+                        // Calculate error for monitoring
+                        //auto output = GetOutputLayer();
+                        //totalError += 0.5f * (targetOutput[0] - output[0]) * (targetOutput[0] - output[0]); // Mean Squared Error
+                    }
+                } 
+            }
             
             constexpr std::array<float,outputPerceptronCount> GetOutputLayer() const {
                 std::array<float,outputPerceptronCount> result;
