@@ -19,7 +19,7 @@ constexpr int cround(double x) {
     return (x >= 0.0) ? int(x + 0.5) : int(x - 0.5);
   }
 
-consteval an::AstrocyteNetwork<3, 5, 2> TestConsEval(){
+consteval void TestConsEval(){
     float learningRate = 0.2f;
     int epochs = 3000;
     std::array<std::pair<std::array<float, 3>, std::array<float, 2>>, 4> trainingData = {
@@ -30,12 +30,12 @@ consteval an::AstrocyteNetwork<3, 5, 2> TestConsEval(){
     };
 
     an::AstrocyteNetwork<3, 5, 2> network;
-    network.Train(trainingData,learningRate,epochs);
-    return network;
+    //network.Train(trainingData,learningRate,epochs);
+    //return network;
 }
 
 int main() {
-    //TestConsEval();
+    TestConsEval();
     float learningRate = 0.2f;
     int epochs = 3000;
     std::array<std::pair<std::array<float, 3>, std::array<float, 2>>, 4> trainingData = {
