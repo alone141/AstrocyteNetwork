@@ -16,11 +16,9 @@ namespace perceptron{
             static_assert(inputCount > 0, "Input count must be greater than 0.");
             static_assert(inputCount +1 == inputCountWithBias, "Please do not use this template parameter.");
     
-            /* static int index = 0; */
             for (int i=0; i < inputCountWithBias; i++)
             {
-                weights[i] = utility::random::GetRandomUniform2();
-                /* index +=5; */
+                weights[i] = utility::random::GetRandomUniform();
             }
             
             
@@ -31,7 +29,7 @@ namespace perceptron{
             inputs[0] = 1;
         }
         constexpr ~Perceptron() = default; 
-    
+
         constexpr float CalculateOutput() override {
             float sum = 0.0f;
             for(int i = 0; i < inputCountWithBias; i++){

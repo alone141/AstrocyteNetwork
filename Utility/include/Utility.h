@@ -139,15 +139,21 @@ namespace utility::random {
 
     };
 
-    constexpr auto GetRandomUniform(int count)
-    {
-        PCG pcg;
-        while (count > 0) {
-            pcg();
-            --count;
-        }
 
-        return static_cast<float>(pcg()) / INT_MAX - 0.5f;
+    constexpr float GetRandomUniform(float lower = -0.5f, float upper = 0.5f)
+    {
+        static int count = 0;
+        PCG pcg;
+        for (int i = 0; i < count; ++i) {
+            pcg(); // Advance the PCG generator
+        }
+        ++count;
+    
+        // Generate a random number in the range [0, 1]
+        float randomValue = static_cast<float>(pcg()) / INT_MAX;
+    
+        // Scale and shift to the desired range [lower, upper]
+        return lower + randomValue * (upper - lower);
     }
     float GetRandomUniform2()
     {

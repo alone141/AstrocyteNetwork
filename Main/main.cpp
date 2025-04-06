@@ -14,10 +14,12 @@ consteval float fun(){
     an.Backpropagation(backprop,0.01);
     return output;
 }
-
+constexpr int cround(double x) {
+    return (x >= 0.0) ? int(x + 0.5) : int(x - 0.5);
+  }
 
 void TrainXOR() {
-    // Define the network: 2 input perceptrons, 2 hidden perceptrons, 1 output perceptron
+    // Define the network: 3 input perceptrons, 5 hidden perceptrons, 2 output perceptron
     an::AstrocyteNetwork<3, 5, 2> network;
     std::cout << " --------------------------------- Before Training --------------------------------- " << std::endl;
     network.Print();
@@ -68,13 +70,21 @@ void TrainXOR() {
         auto output = network.GetOutputLayer();
         std::cout << "Input: {" << input[0] << ", " << input[1] << "} -> Predicted Output: " << output[0] << " || " << output[1] 
                     << ", Target Output: " << targetOutput[0] << " || "<< targetOutput[1] << std::endl;
-    }
-}
 
+        if(cround(output[0]) != cround(targetOutput[0]) or 
+        cround(output[1]) != cround(targetOutput[1])){
+            std::cout << "ERROR" << std::endl;
+        }
+    }
+    
+}
+consteval void TestConsEval(){
+/*     an::AstrocyteNetwork<3, 5, 2> network; */
+}
 
 int main() {
 
-
+    TestConsEval();
     TrainXOR();
 
     /*
