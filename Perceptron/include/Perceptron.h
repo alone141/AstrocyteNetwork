@@ -12,13 +12,13 @@ namespace perceptron{
     template<int inputCount, ActivationFunctionEnum actFunctionEnum, int inputCountWithBias = inputCount + 1>
     class Perceptron : public IPerceptron {
     public:
-        constexpr Perceptron(int bias = 0){
+        constexpr Perceptron(int randomSeed){
             static_assert(inputCount > 0, "Input count must be greater than 0.");
             static_assert(inputCount +1 == inputCountWithBias, "Please do not use this template parameter.");
     
             for (int i=0; i < inputCountWithBias; i++)
             {
-                weights[i] = utility::random::GetRandomUniform();
+                weights[i] = utility::random::GetRandomUniform(randomSeed*(i+1));
             }
             
             

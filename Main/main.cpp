@@ -5,7 +5,7 @@
 #include <initializer_list>
 consteval float fun(){
 
-    perceptron::Perceptron <1, perceptron::ActivationFunctionEnum::Sigmoid> p;
+    perceptron::Perceptron <1, perceptron::ActivationFunctionEnum::Sigmoid> p(5);
     an::AstrocyteNetwork<2,2,1> an;
     auto input = std::to_array({10.0f,7.0f});
     auto backprop = std::to_array({10.0f});
@@ -34,8 +34,8 @@ void TrainXOR() {
     };
 
     // Training parameters
-    float learningRate = 0.1f;
-    int epochs = 10000;
+    float learningRate = 0.2f;
+    int epochs = 3000;
 
     // Training loop
     for (int epoch = 0; epoch < epochs; ++epoch) {
@@ -79,11 +79,38 @@ void TrainXOR() {
     
 }
 consteval void TestConsEval(){
-/*     an::AstrocyteNetwork<3, 5, 2> network; */
+    an::AstrocyteNetwork<3, 5, 2> network;
+
+    std::array<std::pair<std::array<float, 3>, std::array<float, 2>>, 4> trainingData = {
+        std::make_pair(std::array<float, 3>{0.0f, 0.0f, 1.0f}, std::array<float, 2>{0.0f,0.0f}),
+        std::make_pair(std::array<float, 3>{0.0f, 1.0f, 1.0f}, std::array<float, 2>{1.0f,0.0f}),
+        std::make_pair(std::array<float, 3>{1.0f, 0.0f, 1.0f}, std::array<float, 2>{1.0f,0.0f}),
+        std::make_pair(std::array<float, 3>{1.0f, 1.0f, 0.5f}, std::array<float, 2>{0.0f,1.0f})
+    };
+   // Training parameters
+    float learningRate = 0.2f;
+    int epochs = 3000;
+
+    // Training loop
+    for (int epoch = 0; epoch < epochs; ++epoch) {
+        float totalError = 0.0f;
+
+        for (auto& [input, targetOutput] : trainingData) {
+            // Forward pass
+            network.FeedForward(input);
+
+            // Backpropagation
+            network.Backpropagation(targetOutput, learningRate);
+
+            // Calculate error for monitoring
+            auto output = network.GetOutputLayer();
+            totalError += 0.5f * (targetOutput[0] - output[0]) * (targetOutput[0] - output[0]); // Mean Squared Error
+        }
+    } 
 }
 
 int main() {
-
+    constexpr auto a = utility::random::GetRandomUniform();
     TestConsEval();
     TrainXOR();
 

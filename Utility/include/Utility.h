@@ -140,9 +140,8 @@ namespace utility::random {
     };
 
 
-    constexpr float GetRandomUniform2(float lower = -0.5f, float upper = 0.5f)
+    constexpr float GetRandomUniform(int count = 1, float lower = -0.5f, float upper = 0.5f)
     {
-        static int count = 0;
         PCG pcg;
         for (int i = 0; i < count; ++i) {
             pcg(); // Advance the PCG generator
@@ -155,7 +154,7 @@ namespace utility::random {
         // Scale and shift to the desired range [lower, upper]
         return lower + randomValue * (upper - lower);
     }
-    float GetRandomUniform()
+    float GetRandomUniform2()
     {
         std::random_device rd;
         std::mt19937 gen(rd());

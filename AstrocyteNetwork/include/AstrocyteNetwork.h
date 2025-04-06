@@ -29,18 +29,26 @@ namespace an{
             constexpr ~AstrocyteNetwork() = default;
 
             constexpr void InitializeNetwork() override{
+                int perceptronSeed = 1; //used for random initialization of weights
                 for (auto &&perceptron : inputLayer)
                 {
-                    perceptron = std::make_unique<inputPerceptronType>();
+                    perceptron = std::make_unique<inputPerceptronType>(perceptronSeed);
                     perceptron->ResetWeights();
+                    perceptronSeed++;
                 }
+
+                perceptronSeed = 100;
                 for (auto &&perceptron : hiddenLayer)
                 {
-                    perceptron = std::make_unique<hiddenPerceptronType>();
+                    perceptron = std::make_unique<hiddenPerceptronType>(perceptronSeed);
+                    perceptronSeed++;
                 }
+
+                perceptronSeed = 1000;
                 for (auto &&perceptron : outputLayer)
                 {
-                    perceptron = std::make_unique<outputPerceptronType>();
+                    perceptron = std::make_unique<outputPerceptronType>(perceptronSeed);
+                    perceptronSeed++;
                 }
             }
 
