@@ -19,7 +19,7 @@ constexpr int cround(double x) {
     return (x >= 0.0) ? int(x + 0.5) : int(x - 0.5);
   }
 
-consteval void TestConsEval(){
+consteval auto TestConsEval(){
     float learningRate = 0.2f;
     int epochs = 3000;
     std::array<std::pair<std::array<float, 3>, std::array<float, 2>>, 4> trainingData = {
@@ -30,12 +30,14 @@ consteval void TestConsEval(){
     };
 
     an::AstrocyteNetwork<3, 5, 2> network;
+    auto retVal = network.SerializeWeights();
+    return retVal;
     //network.Train(trainingData,learningRate,epochs);
     //return network;
 }
 
 int main() {
-    TestConsEval();
+    auto retVall = TestConsEval();
     float learningRate = 0.2f;
     int epochs = 3000;
     std::array<std::pair<std::array<float, 3>, std::array<float, 2>>, 4> trainingData = {
@@ -70,8 +72,10 @@ int main() {
             std::cout << "ERROR" << std::endl;
         }
     }
+    an::AstrocyteNetwork<3, 5, 2> randomNetwork;
+    auto wei = randomNetwork.SerializeWeights();
 
-
+    network.DeserializeWeights(wei);
     constexpr auto a = utility::random::GetRandomUniform();
     //constexpr auto result = TestConsEval();
     //std::cout << "Calculated Output 1: " << result[0] << std::endl;

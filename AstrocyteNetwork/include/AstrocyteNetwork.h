@@ -195,6 +195,50 @@ namespace an{
                     outputLayer[o]->Print();
                 }
             }
+
+            constexpr auto SerializeWeights(){
+                const int arraySize = (inputPerceptronCount+1)*hiddenPerceptronCount + (hiddenPerceptronCount+1)*outputPerceptronCount;
+                std::array<float,arraySize> weights;
+                int index = 0;
+                for (std::size_t i = 0; i < hiddenPerceptronCount; i++)
+                {
+                    for (std::size_t w = 0; w < inputPerceptronCount+1; w++)
+                    {
+                        weights[index] = hiddenLayer[i]->GetWeight(w);
+                        index++;
+                    }
+                }
+                for (std::size_t i = 0; i < outputPerceptronCount; i++)
+                {
+                    for (std::size_t w = 0; w < hiddenPerceptronCount+1; w++)
+                    {
+                        weights[index] = outputLayer[i]->GetWeight(w);
+                        index++;
+                    }
+                }
+                return weights;
+            }
+
+            void DeserializeWeights(std::array<float,(inputPerceptronCount+1)*hiddenPerceptronCount + (hiddenPerceptronCount+1)*outputPerceptronCount> weights){
+
+                int index = 0;
+                for (std::size_t i = 0; i < hiddenPerceptronCount; i++)
+                {
+                    for (std::size_t w = 0; w < inputPerceptronCount+1; w++)
+                    {
+                        hiddenLayer[i]->SetWeight(w, weights[index]);
+                        index++;
+                    }
+                }
+                for (std::size_t i = 0; i < outputPerceptronCount; i++)
+                {
+                    for (std::size_t w = 0; w < hiddenPerceptronCount+1; w++)
+                    {
+                        outputLayer[i]->SetWeight(w, weights[index]);
+                        index++;
+                    }
+                }
+            }
         private:
             Layer<inputPerceptronCount> inputLayer; 
             Layer<hiddenPerceptronCount> hiddenLayer; 
