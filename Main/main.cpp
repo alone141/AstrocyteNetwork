@@ -18,17 +18,17 @@ consteval float fun(){
 
 void TrainXOR() {
     // Define the network: 2 input perceptrons, 2 hidden perceptrons, 1 output perceptron
-    an::AstrocyteNetwork<2, 20, 1> network;
+    an::AstrocyteNetwork<3, 5, 2> network;
     std::cout << " --------------------------------- Before Training --------------------------------- " << std::endl;
     network.Print();
     std::cout << " --------------------------------- Before Training --------------------------------- " << std::endl;
 
     // XOR training data
-    std::array<std::pair<std::array<float, 2>, std::array<float, 1>>, 4> trainingData = {
-        std::make_pair(std::array<float, 2>{0.0f, 0.0f}, std::array<float, 1>{0.0f}),
-        std::make_pair(std::array<float, 2>{0.0f, 1.0f}, std::array<float, 1>{1.0f}),
-        std::make_pair(std::array<float, 2>{1.0f, 0.0f}, std::array<float, 1>{1.0f}),
-        std::make_pair(std::array<float, 2>{1.0f, 1.0f}, std::array<float, 1>{0.0f})
+    std::array<std::pair<std::array<float, 3>, std::array<float, 2>>, 4> trainingData = {
+        std::make_pair(std::array<float, 3>{0.0f, 0.0f, 1.0f}, std::array<float, 2>{0.0f,0.0f}),
+        std::make_pair(std::array<float, 3>{0.0f, 1.0f, 1.0f}, std::array<float, 2>{1.0f,0.0f}),
+        std::make_pair(std::array<float, 3>{1.0f, 0.0f, 1.0f}, std::array<float, 2>{1.0f,0.0f}),
+        std::make_pair(std::array<float, 3>{1.0f, 1.0f, 0.5f}, std::array<float, 2>{0.0f,1.0f})
     };
 
     // Training parameters
@@ -57,19 +57,18 @@ void TrainXOR() {
         }
     }
 
+    std::cout << " --------------------------------- After Training --------------------------------- " << std::endl;
+    network.Print();
+    std::cout << " --------------------------------- After Training --------------------------------- " << std::endl;
+
     // Test the network after training
     std::cout << "\nTesting the trained network:\n";
     for (auto& [input, targetOutput] : trainingData) {
         network.FeedForward(input);
         auto output = network.GetOutputLayer();
-        std::cout << "Input: {" << input[0] << ", " << input[1] << "} -> Predicted Output: " << output[0]
-                  << ", Target Output: " << targetOutput[0] << std::endl;
+        std::cout << "Input: {" << input[0] << ", " << input[1] << "} -> Predicted Output: " << output[0] << " || " << output[1] 
+                    << ", Target Output: " << targetOutput[0] << " || "<< targetOutput[1] << std::endl;
     }
-
-    std::cout << " --------------------------------- After Training --------------------------------- " << std::endl;
-    network.Print();
-    std::cout << " --------------------------------- After Training --------------------------------- " << std::endl;
-
 }
 
 
