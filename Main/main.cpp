@@ -3,6 +3,7 @@
 #include <Perceptron.h>
 #include <AstrocyteNetwork.h>
 #include <initializer_list>
+#include <memory>
 consteval float fun(){
 
     perceptron::Perceptron <1, perceptron::ActivationFunctionEnum::Sigmoid> p(5);
@@ -18,7 +19,7 @@ constexpr int cround(double x) {
     return (x >= 0.0) ? int(x + 0.5) : int(x - 0.5);
   }
 
-consteval void TestConsEval(){
+consteval an::AstrocyteNetwork<3, 5, 2> TestConsEval(){
     float learningRate = 0.2f;
     int epochs = 3000;
     std::array<std::pair<std::array<float, 3>, std::array<float, 2>>, 4> trainingData = {
@@ -30,11 +31,11 @@ consteval void TestConsEval(){
 
     an::AstrocyteNetwork<3, 5, 2> network;
     network.Train(trainingData,learningRate,epochs);
-
+    return network;
 }
 
 int main() {
-    TestConsEval();
+    //TestConsEval();
     float learningRate = 0.2f;
     int epochs = 3000;
     std::array<std::pair<std::array<float, 3>, std::array<float, 2>>, 4> trainingData = {
@@ -43,7 +44,7 @@ int main() {
         std::make_pair(std::array<float, 3>{1.0f, 0.0f, 1.0f}, std::array<float, 2>{1.0f,0.0f}),
         std::make_pair(std::array<float, 3>{1.0f, 1.0f, 0.5f}, std::array<float, 2>{0.0f,1.0f})
     };
-
+    
     an::AstrocyteNetwork<3, 5, 2> network;
     std::cout << " --------------------------------- Before Training --------------------------------- " << std::endl;
     network.Print();
@@ -54,6 +55,7 @@ int main() {
     std::cout << " --------------------------------- After Training --------------------------------- " << std::endl;
     network.Print();
     std::cout << " --------------------------------- After Training --------------------------------- " << std::endl;
+
 
     // Test the network after training
     std::cout << "\nTesting the trained network:\n";

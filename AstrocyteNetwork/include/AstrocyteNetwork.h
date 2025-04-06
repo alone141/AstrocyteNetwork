@@ -27,6 +27,22 @@ namespace an{
                 InitializeNetwork();
             }
             constexpr ~AstrocyteNetwork() = default;
+            constexpr AstrocyteNetwork(const AstrocyteNetwork& other) {
+                // Copy input layer
+                for (std::size_t i = 0; i < inputPerceptronCount; ++i) {
+                    inputLayer[i] = std::make_unique<inputPerceptronType>(*static_cast<inputPerceptronType*>(other.inputLayer[i].get()));
+                }
+        
+                // Copy hidden layer
+                for (std::size_t h = 0; h < hiddenPerceptronCount; ++h) {
+                    hiddenLayer[h] = std::make_unique<hiddenPerceptronType>(*static_cast<hiddenPerceptronType*>(other.hiddenLayer[h].get()));
+                }
+        
+                // Copy output layer
+                for (std::size_t o = 0; o < outputPerceptronCount; ++o) {
+                    outputLayer[o] = std::make_unique<outputPerceptronType>(*static_cast<outputPerceptronType*>(other.outputLayer[o].get()));
+                }
+            }
 
             constexpr void InitializeNetwork() override{
                 int perceptronSeed = 1; //used for random initialization of weights
@@ -147,7 +163,18 @@ namespace an{
                 return result;
             }
             constexpr void ResetNetwork() override{
-
+                for (auto &&perceptron : inputLayer)
+                {
+                    perceptron->ResetWeights();
+                }
+                for (auto &&perceptron : hiddenLayer)
+                {
+                    perceptron->ResetWeights();
+                }
+                for (auto &&perceptron : outputLayer)
+                {
+                    perceptron->ResetWeights();
+                }
             }
             void Print(){
                 std::cout << "Input Layer:" << std::endl;
