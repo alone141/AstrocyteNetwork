@@ -67,11 +67,11 @@ namespace utility
 
 namespace utility::af{
     float Sigmoid(float x) {
-        //if(x < 10) abort();
-        return 1.0f / (1.0f + std::expf(-x));
-        //return 1.0f / (1.0f + utility::exp(-x));
+        return 1.0f / (1.0f + utility::exp(-x));
     }
-
+    constexpr float PseudoSigmoid(float x) {
+        return 0.5f * (x / (1.0f + ((x < 0.0f) ? -x : x)) + 1.0f);
+    }
     constexpr float Relu(float x) {
         return x > 0.0f ? x : 0.0f;
     }
@@ -140,7 +140,7 @@ namespace utility::random {
     };
 
 
-    constexpr float GetRandomUniform(float lower = -0.5f, float upper = 0.5f)
+    constexpr float GetRandomUniform2(float lower = -0.5f, float upper = 0.5f)
     {
         static int count = 0;
         PCG pcg;
@@ -155,11 +155,11 @@ namespace utility::random {
         // Scale and shift to the desired range [lower, upper]
         return lower + randomValue * (upper - lower);
     }
-    float GetRandomUniform2()
+    float GetRandomUniform()
     {
         std::random_device rd;
         std::mt19937 gen(rd());
-        std::uniform_real_distribution<float> dis(-1.5f, 1.5f);
+        std::uniform_real_distribution<float> dis(-0.5f, 0.5f);
         return dis(gen)*0.5;
     }
 }

@@ -13,8 +13,8 @@ namespace an{
         template<int perceptronCount>
         using Layer = std::array<std::unique_ptr<perceptron::IPerceptron>, perceptronCount>;
         using inputPerceptronType = perceptron::Perceptron<1,perceptron::ActivationFunctionEnum::Linear>;
-        using hiddenPerceptronType = perceptron::Perceptron<inputPerceptronCount, perceptron::ActivationFunctionEnum::Sigmoid>;
-        using outputPerceptronType = perceptron::Perceptron<hiddenPerceptronCount,perceptron::ActivationFunctionEnum::Sigmoid>;
+        using hiddenPerceptronType = perceptron::Perceptron<inputPerceptronCount, perceptron::ActivationFunctionEnum::PseudoSigmoid>;
+        using outputPerceptronType = perceptron::Perceptron<hiddenPerceptronCount,perceptron::ActivationFunctionEnum::PseudoSigmoid>;
 
         public:
             constexpr AstrocyteNetwork(){

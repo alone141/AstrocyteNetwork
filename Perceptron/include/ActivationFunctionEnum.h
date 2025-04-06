@@ -6,6 +6,7 @@ namespace perceptron {
         None = -1,
         Linear,
         Sigmoid,
+        PseudoSigmoid,
         ReLU,
         LeakyReLU,
         Tanh

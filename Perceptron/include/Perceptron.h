@@ -48,6 +48,9 @@ namespace perceptron{
             else if constexpr (actFunctionEnum == ActivationFunctionEnum::Sigmoid) {
                 return utility::af::Sigmoid(input);
             }
+            else if constexpr (actFunctionEnum == ActivationFunctionEnum::PseudoSigmoid) {
+                return utility::af::PseudoSigmoid(input);
+            }
             else if constexpr (actFunctionEnum == ActivationFunctionEnum::Tanh) {
                 return utility::af::Tanh(input);
             }
