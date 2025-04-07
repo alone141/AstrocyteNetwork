@@ -8,14 +8,14 @@
 
 
 namespace an{
-    template<int inputPerceptronCount, int hiddenPerceptronCount, int outputPerceptronCount, int layerCount = 1>
+    template<int inputPerceptronCount, int hiddenPerceptronCount, int outputPerceptronCount, int layerCount = 1,
+    int totalWeightCount = ((inputPerceptronCount+1)*hiddenPerceptronCount + (hiddenPerceptronCount+1)*outputPerceptronCount)>
     class AstrocyteNetwork : public IAstrocyteNetwork {
         template<int perceptronCount>
         using Layer = std::array<std::unique_ptr<perceptron::IPerceptron>, perceptronCount>;
         using inputPerceptronType = perceptron::Perceptron<1,perceptron::ActivationFunctionEnum::Linear>;
         using hiddenPerceptronType = perceptron::Perceptron<inputPerceptronCount, perceptron::ActivationFunctionEnum::PseudoSigmoid>;
         using outputPerceptronType = perceptron::Perceptron<hiddenPerceptronCount,perceptron::ActivationFunctionEnum::PseudoSigmoid>;
-
         public:
             constexpr AstrocyteNetwork(){
                 static_assert(inputPerceptronCount > 0,  "Input layer perceptron count must be bigger than 0");
@@ -23,6 +23,9 @@ namespace an{
                 static_assert(layerCount > 0,            "Layer count must be bigger than 0");
                 static_assert(layerCount == 1,           "Currently, only networks with 1 hidden layer is supported");
                 static_assert(outputPerceptronCount > 0, "Output layer perceptron count must be bigger than 0");
+                static_assert(totalWeightCount == 
+                    (inputPerceptronCount+1)*hiddenPerceptronCount + (hiddenPerceptronCount+1)*outputPerceptronCount, 
+                    "Please do not use this template argument");
 
                 InitializeNetwork();
             }
@@ -43,7 +46,10 @@ namespace an{
                     outputLayer[o] = std::make_unique<outputPerceptronType>(*static_cast<outputPerceptronType*>(other.outputLayer[o].get()));
                 }
             }
-
+            constexpr AstrocyteNetwork(std::array<float,totalWeightCount> weights) {
+                InitializeNetwork(); //this is suboptimal
+                DeserializeWeights(weights);
+            }
             constexpr void InitializeNetwork() override{
                 int perceptronSeed = 1; //used for random initialization of weights
                 for (auto &&perceptron : inputLayer)
@@ -193,8 +199,7 @@ namespace an{
             }
 
             constexpr auto SerializeWeights(){
-                const int arraySize = (inputPerceptronCount+1)*hiddenPerceptronCount + (hiddenPerceptronCount+1)*outputPerceptronCount;
-                std::array<float,arraySize> weights;
+                std::array<float,totalWeightCount> weights;
                 int index = 0;
                 for (std::size_t i = 0; i < hiddenPerceptronCount; i++)
                 {
@@ -215,7 +220,7 @@ namespace an{
                 return weights;
             }
 
-            void DeserializeWeights(std::array<float,(inputPerceptronCount+1)*hiddenPerceptronCount + (hiddenPerceptronCount+1)*outputPerceptronCount> weights){
+            void DeserializeWeights(std::array<float,totalWeightCount> weights){
 
                 int index = 0;
                 for (std::size_t i = 0; i < hiddenPerceptronCount; i++)
