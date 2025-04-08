@@ -75,7 +75,7 @@ namespace an{
                 }
             }
 
-            constexpr void FeedForward(std::array<float,inputPerceptronCount>& inputArray) {
+            constexpr void FeedForward(const std::array<float,inputPerceptronCount>& inputArray) {
                 for (std::size_t i = 0; i < inputPerceptronCount; ++i) {
                     inputLayer[i]->SetInput(1, inputArray[i]); // assign each input to the corresponding perceptron
                     inputLayer[i]->CalculateOutput(); //this step might be unnecessary
@@ -95,7 +95,7 @@ namespace an{
                 }    
             }
 
-            constexpr void Backpropagation(std::array<float, outputPerceptronCount>& expectedArray, float learningRate) {
+            constexpr void Backpropagation(const std::array<float, outputPerceptronCount>& expectedArray, const float learningRate) {
 
                 //https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/
                 std::array<float, outputPerceptronCount> outputGradients;
@@ -141,11 +141,11 @@ namespace an{
                     hiddenLayer[h]->SetWeight(0, newBiasWeight);
                 }
             }
-            constexpr void Train(std::array<std::pair<std::array<float, 3>, std::array<float, 2>>, 4> trainingData, float learningRate, int epochs){
-                for (int epoch = 0; epoch < epochs; ++epoch) {
+            constexpr void Train(std::array<std::pair<std::array<float, 3>, std::array<float, 2>>, 4> trainingData, const float learningRate, const int epochs){
+                for (std::size_t epoch = 0; epoch < epochs; ++epoch) {
                     float totalError = 0.0f;
 
-                    for (auto& [input, targetOutput] : trainingData) {
+                    for (const auto& [input, targetOutput] : trainingData) {
                         FeedForward(input);
 
                         Backpropagation(targetOutput, learningRate);
@@ -179,7 +179,7 @@ namespace an{
                     perceptron->ResetWeights();
                 }
             }
-            void Print(){
+            void Print() const {
                 std::cout << "Input Layer:" << std::endl;
                 for (std::size_t i = 0; i < inputPerceptronCount; ++i) {
                     std::cout << "Perceptron " << i << ": " << std::endl;
@@ -199,7 +199,7 @@ namespace an{
                 }
             }
 
-            constexpr std::array<float,totalWeightCount> SerializeWeights(){
+            constexpr std::array<float,totalWeightCount> SerializeWeights() const {
                 std::array<float,totalWeightCount> weights;
                 int index = 0;
                 for (std::size_t i = 0; i < hiddenPerceptronCount; i++)
@@ -221,7 +221,7 @@ namespace an{
                 return weights;
             }
 
-            void DeserializeWeights(std::array<float,totalWeightCount> weights){
+            void DeserializeWeights(const std::array<float,totalWeightCount> weights){
 
                 int index = 0;
                 for (std::size_t i = 0; i < hiddenPerceptronCount; i++)

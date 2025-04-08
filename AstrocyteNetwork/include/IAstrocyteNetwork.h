@@ -8,6 +8,7 @@ namespace an{
         
             virtual constexpr void InitializeNetwork() = 0;
             virtual constexpr void ResetNetwork() = 0;
+            virtual void Print() const = 0;
         };
 }
 

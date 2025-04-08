@@ -2,7 +2,6 @@
 #define PERCEPTRON_H
 
 #include <IPerceptron.h>
-#include <Config.h>
 #include <Utility.h>
 #include <array>
 #include <ActivationFunctionEnum.h>
@@ -36,7 +35,7 @@ namespace perceptron{
             return output;
         }
     
-        constexpr float ActivationFunction(float input) override {
+        constexpr float ActivationFunction(const float input) const override {
             if constexpr (actFunctionEnum == ActivationFunctionEnum::Linear){
                 return utility::af::Linear(input);
             }
@@ -63,31 +62,31 @@ namespace perceptron{
             return output;
         }
 
-        //todo: bound check
-        constexpr float GetWeight(unsigned int weightIndex) const override {
+        constexpr float GetWeight(const unsigned int weightIndex) const override {
             if(weightIndex >= inputCountWithBias){
                 return 0.0f; //or throw an exception idk yet
             }
             return weights[weightIndex];
         }
-        constexpr void SetInput(unsigned int inputIndex, float inputValue) override {
+        constexpr void SetInput(const unsigned int inputIndex, float inputValue) override {
             if(inputIndex >= inputCountWithBias){
                 return;
             }
             inputs[inputIndex] = inputValue;
         }
-        constexpr void SetWeight(unsigned int weightIndex, float weightValue) override {
+        constexpr void SetWeight(const unsigned int weightIndex, float weightValue) override {
             if(weightIndex >= inputCountWithBias){
                 return;
             }
             weights[weightIndex] = weightValue;
         }
 
-        //doesnt do what its supposed to do yet
+        //might not be the correct name for this function
         constexpr void ResetWeights() override {
             weights.fill(1.0f);
         }
-        void Print() override {
+
+        void Print() const override {
             std::cout << "Weights: {  ";
             for (const auto& weight : weights) {
                 std::cout << weight << ", ";
