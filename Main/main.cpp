@@ -52,7 +52,6 @@ int main() {
     int epochs = 3000;
     an::AstrocyteNetwork<3, 5, 2> network;
     network.Train(trainingData,learningRate,epochs);
-    
     // Test the network after training
     std::cout << "\nTesting the trained network:\n";
     for (auto& [input, targetOutput] : trainingData) {

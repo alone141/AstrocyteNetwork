@@ -11,20 +11,15 @@ namespace perceptron{
     
     template<int inputCount, ActivationFunctionEnum actFunctionEnum, int inputCountWithBias = inputCount + 1>
     class Perceptron : public IPerceptron {
-    public:
-        constexpr Perceptron(int randomSeed){
-            static_assert(inputCount > 0, "Input count must be greater than 0.");
-            static_assert(inputCount +1 == inputCountWithBias, "Please do not use this template parameter.");
-    
+        static_assert(inputCount > 0, "Input count must be greater than 0.");
+        static_assert(inputCount +1 == inputCountWithBias, "Please do not use this template parameter.");
+        public:
+        constexpr Perceptron(int randomSeed) : output(0.0f) {
             for (int i=0; i < inputCountWithBias; i++)
             {
                 weights[i] = utility::random::GetRandomUniform(randomSeed*(i+1));
             }
-            
-            
-            inputs.fill(0.0f);
-/*             weights.fill(0.6f); */
-            
+            //bias is always 1.0f           
             weights[0] = 1;
             inputs[0] = 1;
         }
@@ -70,12 +65,21 @@ namespace perceptron{
 
         //todo: bound check
         constexpr float GetWeight(unsigned int weightIndex) const override {
+            if(weightIndex >= inputCountWithBias){
+                return 0.0f; //or throw an exception idk yet
+            }
             return weights[weightIndex];
         }
         constexpr void SetInput(unsigned int inputIndex, float inputValue) override {
+            if(inputIndex >= inputCountWithBias){
+                return;
+            }
             inputs[inputIndex] = inputValue;
         }
         constexpr void SetWeight(unsigned int weightIndex, float weightValue) override {
+            if(weightIndex >= inputCountWithBias){
+                return;
+            }
             weights[weightIndex] = weightValue;
         }
 

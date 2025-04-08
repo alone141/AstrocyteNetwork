@@ -24,8 +24,8 @@ namespace an{
         static_assert(outputPerceptronCount > 0, "Output layer perceptron count must be bigger than 0");
         static_assert(totalWeightCount == 
             (inputPerceptronCount+1)*hiddenPerceptronCount + (hiddenPerceptronCount+1)*outputPerceptronCount, 
-            "Please do not use this template argument");
-            
+            "Please do not use this template argument, it is calculated automatically");
+
         public:
             constexpr AstrocyteNetwork(){
                 InitializeNetwork();
@@ -199,7 +199,7 @@ namespace an{
                 }
             }
 
-            constexpr auto SerializeWeights(){
+            constexpr std::array<float,totalWeightCount> SerializeWeights(){
                 std::array<float,totalWeightCount> weights;
                 int index = 0;
                 for (std::size_t i = 0; i < hiddenPerceptronCount; i++)
