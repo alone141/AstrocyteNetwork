@@ -4,6 +4,7 @@
 #include <AstrocyteNetwork.h>
 #include <initializer_list>
 #include <memory>
+#include <chrono>
 consteval float fun(){
 
     perceptron::Perceptron <1, perceptron::ActivationFunctionEnum::Sigmoid> p(5);
@@ -48,10 +49,27 @@ int main() {
     //We just need to copy the weights into a new network
     //an::AstrocyteNetwork<3, 5, 2> network(TestConsEval());
 
-    float learningRate = 0.2f;
-    int epochs = 3000;
-    an::AstrocyteNetwork<3, 5, 2> network;
-    network.Train(trainingData,learningRate,epochs);
+    float learningRate = 0.01f;
+    int epochs = 300000;
+    float totalTime =0;
+    float totalRuns = 10;
+    an::AstrocyteNetwork<3, 20, 2> network;
+
+
+    for (size_t i = 0; i < totalRuns; i++)
+    {
+        network.InitializeNetwork();
+        auto start = std::chrono::high_resolution_clock::now();
+        network.Train(trainingData, learningRate, epochs);
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> trainingTime = end - start;
+        std::cout << "Training time(epochs =" << epochs << "): " << trainingTime.count() << " seconds\n";
+        totalTime += trainingTime.count();
+    }
+    std::cout << "Average training time: " << (totalTime / totalRuns) << " seconds\n";
+
+
+    //
     // Test the network after training
     std::cout << "\nTesting the trained network:\n";
     for (auto& [input, targetOutput] : trainingData) {
