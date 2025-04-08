@@ -26,7 +26,7 @@ namespace perceptron{
 
         constexpr float CalculateOutput() override {
             float sum = 0.0f;
-            for(int i = 0; i < inputCountWithBias; i++){
+            for(std::size_t i = 0; i < inputCountWithBias; i++){
                 //custom inputs starts at index 1
                 //index 0 is reserved for bias
                 sum += inputs[i] * weights[i];
