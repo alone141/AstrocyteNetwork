@@ -1,7 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
 
 # Set the project name and version
-project(AstrocyteNetwork VERSION 1.0)
+project(AstrocyteNetwork
+    VERSION 0.7.0
+    DESCRIPTION "An archaic neural network project that completely trains on compile time"
+    HOMEPAGE_URL "https://github.com/alone141/AstrocyteNetwork"
+    LANGUAGES CXX
+)
 
 # Specify the C++ standard
 set(CMAKE_CXX_STANDARD 23)

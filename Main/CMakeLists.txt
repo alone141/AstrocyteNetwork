@@ -1,4 +1,3 @@
-
 # Add an executable
 add_executable(Main main.cpp)
 

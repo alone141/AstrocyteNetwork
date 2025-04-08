@@ -46,8 +46,13 @@ int main() {
     
     //Weights are already trained in compile time no need for network.Train()
     //We just need to copy the weights into a new network
-    an::AstrocyteNetwork<3, 5, 2> network(TestConsEval());
+    //an::AstrocyteNetwork<3, 5, 2> network(TestConsEval());
 
+    float learningRate = 0.2f;
+    int epochs = 3000;
+    an::AstrocyteNetwork<3, 5, 2> network;
+    network.Train(trainingData,learningRate,epochs);
+    
     // Test the network after training
     std::cout << "\nTesting the trained network:\n";
     for (auto& [input, targetOutput] : trainingData) {

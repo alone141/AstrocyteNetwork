@@ -16,17 +16,18 @@ namespace an{
         using inputPerceptronType = perceptron::Perceptron<1,perceptron::ActivationFunctionEnum::Linear>;
         using hiddenPerceptronType = perceptron::Perceptron<inputPerceptronCount, perceptron::ActivationFunctionEnum::PseudoSigmoid>;
         using outputPerceptronType = perceptron::Perceptron<hiddenPerceptronCount,perceptron::ActivationFunctionEnum::PseudoSigmoid>;
+
+        static_assert(inputPerceptronCount > 0,  "Input layer perceptron count must be bigger than 0");
+        static_assert(hiddenPerceptronCount > 0, "Hidden layer perceptron count must be bigger than 0");
+        static_assert(layerCount > 0,            "Layer count must be bigger than 0");
+        static_assert(layerCount == 1,           "Currently, only networks with 1 hidden layer is supported");
+        static_assert(outputPerceptronCount > 0, "Output layer perceptron count must be bigger than 0");
+        static_assert(totalWeightCount == 
+            (inputPerceptronCount+1)*hiddenPerceptronCount + (hiddenPerceptronCount+1)*outputPerceptronCount, 
+            "Please do not use this template argument");
+            
         public:
             constexpr AstrocyteNetwork(){
-                static_assert(inputPerceptronCount > 0,  "Input layer perceptron count must be bigger than 0");
-                static_assert(hiddenPerceptronCount > 0, "Hidden layer perceptron count must be bigger than 0");
-                static_assert(layerCount > 0,            "Layer count must be bigger than 0");
-                static_assert(layerCount == 1,           "Currently, only networks with 1 hidden layer is supported");
-                static_assert(outputPerceptronCount > 0, "Output layer perceptron count must be bigger than 0");
-                static_assert(totalWeightCount == 
-                    (inputPerceptronCount+1)*hiddenPerceptronCount + (hiddenPerceptronCount+1)*outputPerceptronCount, 
-                    "Please do not use this template argument");
-
                 InitializeNetwork();
             }
             constexpr ~AstrocyteNetwork() = default;
