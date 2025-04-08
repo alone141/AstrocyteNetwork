@@ -118,12 +118,12 @@ namespace an{
                 for (std::size_t o = 0; o < outputPerceptronCount; ++o) {
                     for (std::size_t h = 0; h < hiddenPerceptronCount; ++h) {
                         const float& hiddenOutput = hiddenLayer[h]->GetOutput();
-                        const float oldWeight = outputLayer[o]->GetWeight(h + 1); 
-                        const float newWeight = oldWeight - learningRate * outputGradients[o] * hiddenOutput;
+                        const float& oldWeight = outputLayer[o]->GetWeight(h + 1); 
+                        const float& newWeight = oldWeight - learningRate * outputGradients[o] * hiddenOutput;
                         outputLayer[o]->SetWeight(h + 1, newWeight);
                     }
-                    const float oldBiasWeight = outputLayer[o]->GetWeight(0);
-                    const float newBiasWeight = oldBiasWeight - learningRate * outputGradients[o];
+                    const float& oldBiasWeight = outputLayer[o]->GetWeight(0);
+                    const float& newBiasWeight = oldBiasWeight - learningRate * outputGradients[o];
                     outputLayer[o]->SetWeight(0, newBiasWeight);
                 }
             
@@ -131,17 +131,17 @@ namespace an{
                 for (std::size_t h = 0; h < hiddenPerceptronCount; ++h) {
                     for (std::size_t i = 0; i < inputPerceptronCount; ++i) {
                         const float& input = inputLayer[i]->GetOutput();
-                        const float oldWeight = hiddenLayer[h]->GetWeight(i + 1); 
-                        const float newWeight = oldWeight - learningRate * hiddenGradients[h] * input;
+                        const float& oldWeight = hiddenLayer[h]->GetWeight(i + 1); 
+                        const float& newWeight = oldWeight - learningRate * hiddenGradients[h] * input;
                         hiddenLayer[h]->SetWeight(i + 1, newWeight);
                     }
                     // Update bias weight for hidden perceptron
-                    const float oldBiasWeight = hiddenLayer[h]->GetWeight(0);
-                    const float newBiasWeight = oldBiasWeight - learningRate * hiddenGradients[h];
+                    const float& oldBiasWeight = hiddenLayer[h]->GetWeight(0);
+                    const float& newBiasWeight = oldBiasWeight - learningRate * hiddenGradients[h];
                     hiddenLayer[h]->SetWeight(0, newBiasWeight);
                 }
             }
-            constexpr void Train(std::array<std::pair<std::array<float, 3>, std::array<float, 2>>, 4> trainingData, const float learningRate, const int epochs){
+            constexpr void Train(std::array<std::pair<std::array<float, 3>, std::array<float, 2>>, 4>& trainingData, const float learningRate, const int epochs){
                 for (std::size_t epoch = 0; epoch < epochs; ++epoch) {
                     float totalError = 0.0f;
 
