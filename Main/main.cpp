@@ -20,7 +20,7 @@ constexpr int cround(double x) {
     return (x >= 0.0) ? int(x + 0.5) : int(x - 0.5);
   }
 
-consteval auto TestConsEval(){
+consteval auto CompileTimeTrain(){
     float learningRate = 0.2f;
     int epochs = 3000;
     std::array<std::pair<std::array<float, 3>, std::array<float, 2>>, 4> trainingData = {
@@ -34,7 +34,6 @@ consteval auto TestConsEval(){
     network.Train(trainingData,learningRate,epochs);
     auto retVal = network.SerializeWeights();
     return retVal;
-    //return network;
 }
 
 int main() {
@@ -47,7 +46,7 @@ int main() {
     
     //Weights are already trained in compile time no need for network.Train()
     //We just need to copy the weights into a new network
-    //an::AstrocyteNetwork<3, 5, 2> network(TestConsEval());
+    //an::AstrocyteNetwork<3, 5, 2> network(CompileTimeTrain());
 
     float learningRate = 0.01f;
     int epochs = 300000;
