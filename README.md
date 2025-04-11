@@ -39,4 +39,4 @@ To create a neural network, use the AstrocyteNetwork class template. For example
 ```
 
 ### Training on compile time
-
+https://godbolt.org/z/h3hE5T454
