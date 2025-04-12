@@ -81,20 +81,20 @@ TEST(LnTest, HandlesBigValues) {
     EXPECT_NEAR(result, std::log(1000.0f), 0.001f);
 }
 
-TEST(SigmoidTest, ApproximatesSigmoid) {
-    constexpr float result1 = utility::af::Sigmoid(0.0f);  
-    constexpr float result2 = utility::af::Sigmoid(1.0f);  
-    constexpr float result3 = utility::af::Sigmoid(-1.0f); 
-    EXPECT_NEAR(result1, 0.5f, 0.001f); // Sigmoid(0) = 0.5
+TEST(PseudoSigmoidTest, PseudoApproximatesSigmoid) {
+    constexpr float result1 = utility::af::PseudoSigmoid(0.0f);  
+    constexpr float result2 = utility::af::PseudoSigmoid(1.0f);  
+    constexpr float result3 = utility::af::PseudoSigmoid(-1.0f); 
+    EXPECT_NEAR(result1, 0.5f, 0.001f); // PseudoSigmoid(0) = 0.5
     EXPECT_NEAR(result2, 1.0f / (1.0f + std::exp(-1.0f)), 0.001f);
     EXPECT_NEAR(result3, 1.0f / (1.0f + std::exp(1.0f)), 0.001f);
 }
 
-TEST(SigmoidTest, HandlesLargeInputs) {
-    constexpr float result1 = utility::af::Sigmoid(100.0f);  // Large positive input
-    constexpr float result2 = utility::af::Sigmoid(-100.0f); // Large negative input
-    EXPECT_NEAR(result1, 1.0f, 0.001f); // Sigmoid(100) ≈ 1
-    EXPECT_NEAR(result2, 0.0f, 0.001f); // Sigmoid(-100) ≈ 0
+TEST(PseudoSigmoidTest, HandlesLargeInputs) {
+    constexpr float result1 = utility::af::PseudoSigmoid(100.0f);  // Large positive input
+    constexpr float result2 = utility::af::PseudoSigmoid(-100.0f); // Large negative input
+    EXPECT_NEAR(result1, 1.0f, 0.001f); // PseudoSigmoid(100) ≈ 1
+    EXPECT_NEAR(result2, 0.0f, 0.001f); // PseudoSigmoid(-100) ≈ 0
 }
 
 TEST(ReluTest, HandlesPositiveAndNegativeInputs) {

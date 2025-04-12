@@ -14,7 +14,7 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Add an option to enable or disable tests
-option(ENABLE_TEST "Enable testing" OFF)
+option(ENABLE_TEST "Enable testing" ON)
 
 if(ENABLE_TEST)
   enable_testing()

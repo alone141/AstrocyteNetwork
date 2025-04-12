@@ -142,7 +142,7 @@ namespace an{
                 }
             }
             template<int trainingDataSize>
-            constexpr void Train(std::array<std::pair<std::array<float, 3>, std::array<float, 2>>, trainingDataSize>& trainingData, const float learningRate, const int epochs){
+            constexpr void Train(const std::array<std::pair<std::array<float, inputPerceptronCount>, std::array<float, outputPerceptronCount >>, trainingDataSize>& trainingData, const float learningRate, const int epochs){
                 for (std::size_t epoch = 0; epoch < epochs; ++epoch) {
                     float totalError = 0.0f;
 

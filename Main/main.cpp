@@ -37,6 +37,13 @@ consteval auto CompileTimeTrain(){
 }
 
 int main() {
+
+    an::AstrocyteNetwork<5,5,5> network1;
+    an::AstrocyteNetwork<5,5,5> network2;
+
+    auto weights1 = network1.SerializeWeights();
+    auto weights2 = network2.SerializeWeights();
+    auto f = weights1 == weights2;
     auto trainingData = std::to_array({
         std::make_pair(std::array<float, 3>{0.0f, 0.0f, 1.0f}, std::array<float, 2>{0.0f,0.0f}),
         std::make_pair(std::array<float, 3>{0.0f, 1.0f, 1.0f}, std::array<float, 2>{1.0f,0.0f}),
@@ -76,11 +83,11 @@ int main() {
     }
     std::cout << "Average training time: " << (totalTime / totalRuns) << " seconds\n";
 
-
+    auto networkWeights = network.SerializeWeights();
     //
     // Test the network after training
     std::cout << "\nTesting the trained network:\n";
-    for (auto& [input, targetOutput] : trainingData) {
+    for (const auto& [input, targetOutput] : trainingData) {
         network.FeedForward(input);
         auto output = network.GetOutputLayer();
         std::cout << "Input: {" << input[0] << ", " << input[1] 
