@@ -23,12 +23,12 @@ constexpr int cround(double x) {
 consteval auto CompileTimeTrain(){
     float learningRate = 0.2f;
     int epochs = 3000;
-    std::array<std::pair<std::array<float, 3>, std::array<float, 2>>, 4> trainingData = {
-        std::make_pair(std::array<float, 3>{0.0f, 0.0f, 1.0f}, std::array<float, 2>{0.0f,0.0f}),
-        std::make_pair(std::array<float, 3>{0.0f, 1.0f, 1.0f}, std::array<float, 2>{1.0f,0.0f}),
-        std::make_pair(std::array<float, 3>{1.0f, 0.0f, 1.0f}, std::array<float, 2>{1.0f,0.0f}),
-        std::make_pair(std::array<float, 3>{1.0f, 1.0f, 0.5f}, std::array<float, 2>{0.0f,1.0f})
-    };
+    auto trainingData = std::to_array({
+        std::make_pair(std::to_array({0.0f, 0.0f, 1.0f}), std::to_array({0.0f,0.0f})),
+        std::make_pair(std::to_array({0.0f, 1.0f, 1.0f}), std::to_array({1.0f,0.0f})),
+        std::make_pair(std::to_array({1.0f, 0.0f, 1.0f}), std::to_array({1.0f,0.0f})),
+        std::make_pair(std::to_array({1.0f, 1.0f, 0.5f}), std::to_array({0.0f,1.0f}))
+    });
 
     an::AstrocyteNetwork<3, 5, 2> network;
     network.Train(trainingData,learningRate,epochs);
@@ -37,27 +37,11 @@ consteval auto CompileTimeTrain(){
 }
 
 int main() {
-
-    an::AstrocyteNetwork<5,5,5> network1;
-    an::AstrocyteNetwork<5,5,5> network2;
-
-    auto weights1 = network1.SerializeWeights();
-    auto weights2 = network2.SerializeWeights();
-    auto f = weights1 == weights2;
     auto trainingData = std::to_array({
-        std::make_pair(std::array<float, 3>{0.0f, 0.0f, 1.0f}, std::array<float, 2>{0.0f,0.0f}),
-        std::make_pair(std::array<float, 3>{0.0f, 1.0f, 1.0f}, std::array<float, 2>{1.0f,0.0f}),
-        std::make_pair(std::array<float, 3>{1.0f, 0.0f, 1.0f}, std::array<float, 2>{1.0f,0.0f}),
-        std::make_pair(std::array<float, 3>{0.0f, 0.0f, 1.0f}, std::array<float, 2>{0.0f,0.0f}),
-        std::make_pair(std::array<float, 3>{0.0f, 1.0f, 1.0f}, std::array<float, 2>{1.0f,0.0f}),
-        std::make_pair(std::array<float, 3>{1.0f, 0.0f, 1.0f}, std::array<float, 2>{1.0f,0.0f}),
-        std::make_pair(std::array<float, 3>{0.0f, 0.0f, 1.0f}, std::array<float, 2>{0.0f,0.0f}),
-        std::make_pair(std::array<float, 3>{0.0f, 1.0f, 1.0f}, std::array<float, 2>{1.0f,0.0f}),
-        std::make_pair(std::array<float, 3>{1.0f, 0.0f, 1.0f}, std::array<float, 2>{1.0f,0.0f}),
-        std::make_pair(std::array<float, 3>{0.0f, 0.0f, 1.0f}, std::array<float, 2>{0.0f,0.0f}),
-        std::make_pair(std::array<float, 3>{0.0f, 1.0f, 1.0f}, std::array<float, 2>{1.0f,0.0f}),
-        std::make_pair(std::array<float, 3>{1.0f, 0.0f, 1.0f}, std::array<float, 2>{1.0f,0.0f}),
-        std::make_pair(std::array<float, 3>{1.0f, 1.0f, 0.5f}, std::array<float, 2>{0.0f,1.0f})
+        std::make_pair(std::to_array({0.0f, 0.0f, 1.0f}), std::to_array({0.0f,0.0f})),
+        std::make_pair(std::to_array({0.0f, 1.0f, 1.0f}), std::to_array({1.0f,0.0f})),
+        std::make_pair(std::to_array({1.0f, 0.0f, 1.0f}), std::to_array({1.0f,0.0f})),
+        std::make_pair(std::to_array({1.0f, 1.0f, 0.5f}), std::to_array({0.0f,1.0f}))
     });
     
     //Weights are already trained in compile time no need for network.Train()

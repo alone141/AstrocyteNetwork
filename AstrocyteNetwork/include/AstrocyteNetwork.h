@@ -141,8 +141,8 @@ namespace an{
                     hiddenLayer[h]->SetWeight(0, newBiasWeight);
                 }
             }
-            template<int trainingDataSize>
-            constexpr void Train(const std::array<std::pair<std::array<float, inputPerceptronCount>, std::array<float, outputPerceptronCount >>, trainingDataSize>& trainingData, const float learningRate, const int epochs){
+            template<int sampleSize>
+            constexpr void Train(const std::array<std::pair<std::array<float, inputPerceptronCount>, std::array<float, outputPerceptronCount>>, sampleSize>& trainingData, const float learningRate, const int epochs){
                 for (std::size_t epoch = 0; epoch < epochs; ++epoch) {
                     float totalError = 0.0f;
 
