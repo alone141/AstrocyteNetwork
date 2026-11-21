@@ -1,14 +1,16 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <cstdint>
+
 namespace config
 {
-    static constexpr unsigned int HIDDEN_LAYERS = 1;
-    static constexpr unsigned int INPUT_NEURONS = 3;
-    static constexpr unsigned int OUTPUT_NEURONS = 1;
-
     //Number of iteration steps for mathematical computations
-    static constexpr unsigned int MATH_ITERATION_DEPTH = 30; 
+    static constexpr unsigned int MATH_ITERATION_DEPTH = 30;
+
+    //Seed for the initial weights. Fixed so that every build trains the exact same network.
+    //Change it if a network gets stuck in a bad local minimum.
+    static constexpr std::uint64_t RANDOM_SEED = 42;
 }
 
 
