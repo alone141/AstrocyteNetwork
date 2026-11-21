@@ -3,7 +3,11 @@
 
 #include <IAstrocyteNetwork.h>
 #include <Perceptron.h>
+#include <array>
+#include <cstddef>
+#include <iostream>
 #include <memory>
+#include <utility>
 
 
 
@@ -56,9 +60,9 @@ namespace an{
                 for (auto &&perceptron : inputLayer)
                 {
                     perceptron = std::make_unique<inputPerceptronType>(perceptronSeed);
-                    perceptron->ResetWeights();
                     perceptronSeed++;
                 }
+                ConfigureInputLayer();
 
                 perceptronSeed = 100;
                 for (auto &&perceptron : hiddenLayer)
@@ -98,21 +102,22 @@ namespace an{
             constexpr void Backpropagation(const std::array<float, outputPerceptronCount>& expectedArray, const float learningRate) {
 
                 //https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/
-                std::array<float, outputPerceptronCount> outputGradients;
+                //The derivative comes from each perceptron's own activation function.
+                //out * (1 - out) is only correct for the real sigmoid, not for PseudoSigmoid.
+                std::array<float, outputPerceptronCount> outputGradients{};
                 for (std::size_t o = 0; o < outputPerceptronCount; ++o) {
-                    const float& out = outputLayer[o]->GetOutput();
-                    const float& target = expectedArray[o];
-                    outputGradients[o] = (out - target) * out * (1 - out);
+                    const float out = outputLayer[o]->GetOutput();
+                    const float target = expectedArray[o];
+                    outputGradients[o] = (out - target) * outputLayer[o]->ActivationDerivative();
                 }
-            
-                std::array<float, hiddenPerceptronCount> hiddenGradients;
+
+                std::array<float, hiddenPerceptronCount> hiddenGradients{};
                 for (std::size_t h = 0; h < hiddenPerceptronCount; ++h) {
                     float gradientSum = 0.0f;
                     for (std::size_t o = 0; o < outputPerceptronCount; ++o) {
                         gradientSum += outputGradients[o] * outputLayer[o]->GetWeight(h + 1); // h+1 because weight[0] is bias
                     }
-                    const float& hiddenOutput = hiddenLayer[h]->GetOutput();
-                    hiddenGradients[h] = gradientSum * hiddenOutput * (1 - hiddenOutput);
+                    hiddenGradients[h] = gradientSum * hiddenLayer[h]->ActivationDerivative();
                 }
             
                 for (std::size_t o = 0; o < outputPerceptronCount; ++o) {
@@ -141,36 +146,33 @@ namespace an{
                     hiddenLayer[h]->SetWeight(0, newBiasWeight);
                 }
             }
-            template<int sampleSize>
+            //sampleSize must be std::size_t because that is the type std::array uses for its size.
+            //With int, MSVC still deduces it but GCC and Clang reject the call.
+            template<std::size_t sampleSize>
             constexpr void Train(const std::array<std::pair<std::array<float, inputPerceptronCount>, std::array<float, outputPerceptronCount>>, sampleSize>& trainingData, const float learningRate, const int epochs){
-                for (std::size_t epoch = 0; epoch < epochs; ++epoch) {
-                    float totalError = 0.0f;
-
+                for (int epoch = 0; epoch < epochs; ++epoch) {
                     for (const auto& [input, targetOutput] : trainingData) {
                         FeedForward(input);
-
                         Backpropagation(targetOutput, learningRate);
-
-                        // Calculate error for monitoring
-                        //auto output = GetOutputLayer();
-                        //totalError += 0.5f * (targetOutput[0] - output[0]) * (targetOutput[0] - output[0]); // Mean Squared Error
                     }
-                } 
+                }
             }
-            
+
+            constexpr std::array<float,outputPerceptronCount> Predict(const std::array<float,inputPerceptronCount>& inputArray) {
+                FeedForward(inputArray);
+                return GetOutputLayer();
+            }
+
             constexpr std::array<float,outputPerceptronCount> GetOutputLayer() const {
-                std::array<float,outputPerceptronCount> result;
+                std::array<float,outputPerceptronCount> result{};
                 for (std::size_t i = 0; i < outputPerceptronCount; ++i) {
                     result[i] = outputLayer[i]->GetOutput();
                 }
                 
                 return result;
             }
+            //Puts every weight back to its initial random value (same values InitializeNetwork produced)
             constexpr void ResetNetwork() override{
-                for (auto &&perceptron : inputLayer)
-                {
-                    perceptron->ResetWeights();
-                }
                 for (auto &&perceptron : hiddenLayer)
                 {
                     perceptron->ResetWeights();
@@ -179,8 +181,9 @@ namespace an{
                 {
                     perceptron->ResetWeights();
                 }
+                ConfigureInputLayer();
             }
-            void Print() const {
+            void Print() const override {
                 std::cout << "Input Layer:" << std::endl;
                 for (std::size_t i = 0; i < inputPerceptronCount; ++i) {
                     std::cout << "Perceptron " << i << ": " << std::endl;
@@ -201,8 +204,8 @@ namespace an{
             }
 
             constexpr std::array<float,totalWeightCount> SerializeWeights() const {
-                std::array<float,totalWeightCount> weights;
-                int index = 0;
+                std::array<float,totalWeightCount> weights{};
+                std::size_t index = 0;
                 for (std::size_t i = 0; i < hiddenPerceptronCount; i++)
                 {
                     for (std::size_t w = 0; w < inputPerceptronCount+1; w++)
@@ -222,9 +225,10 @@ namespace an{
                 return weights;
             }
 
-            void DeserializeWeights(const std::array<float,totalWeightCount> weights){
+            //constexpr so a network can be rebuilt from trained weights, and used, at compile time too
+            constexpr void DeserializeWeights(const std::array<float,totalWeightCount>& weights){
 
-                int index = 0;
+                std::size_t index = 0;
                 for (std::size_t i = 0; i < hiddenPerceptronCount; i++)
                 {
                     for (std::size_t w = 0; w < inputPerceptronCount+1; w++)
@@ -243,7 +247,17 @@ namespace an{
                 }
             }
         private:
-            Layer<inputPerceptronCount> inputLayer; 
+            //Input perceptrons only pass their input through: output = 0 * bias + 1 * input.
+            //The bias input is always 1, so a bias weight of 1 would silently add +1 to every input.
+            constexpr void ConfigureInputLayer() {
+                for (auto &&perceptron : inputLayer)
+                {
+                    perceptron->SetWeight(0, 0.0f);
+                    perceptron->SetWeight(1, 1.0f);
+                }
+            }
+
+            Layer<inputPerceptronCount> inputLayer;
             Layer<hiddenPerceptronCount> hiddenLayer; 
             Layer<outputPerceptronCount> outputLayer; 
         };
